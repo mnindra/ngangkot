@@ -1,29 +1,13 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+import { StackNavigator } from 'react-navigation';
+import Main from './app/screens/Main';
 
-import React, { Component } from 'react';
-import {
-  Container,
-  Header,
-  Content,
-  Button,
-  Text
-} from 'native-base';
-
-export default class ngangkot extends Component {
-  render() {
-    return (
-      <Container>
-        <Header />
-        <Content>
-          <Button danger>
-            <Text>Click Me</Text>
-          </Button>
-        </Content>
-      </Container>
-    );
+const ngangkot = StackNavigator({
+  Main: {screen: Main}
+}, {
+  headerMode: 'screen',
+  navigationOptions: {
+    header: false
   }
-}
+});
+
+export default ngangkot;
