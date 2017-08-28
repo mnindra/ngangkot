@@ -36,6 +36,10 @@ export default class Daftar extends Component {
 
   daftar () {
     firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(() => {
+      let d = new Date();
+      let tanggal = String(d.getDate());
+      let bulan = String(d.getMonth() + 1);
+      let tahun = String(d.getFullYear());
       let user = firebase.auth().currentUser;
       firebase.database().ref('penumpang/' + user.uid).set({
         id_penumpang: user.uid,
@@ -50,7 +54,7 @@ export default class Daftar extends Component {
           longitude: 0
         },
         online: 1,
-        tanggal: new Date()
+        tanggal: `${tanggal}/${bulan}/${tahun}`
       });
       this.resetInput();
     });
