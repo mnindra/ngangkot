@@ -8,6 +8,7 @@
 	},
 	"dependencies": {
 		"babel-preset-react-native": "^2.1.0",
+		"firebase": "^4.3.0",
 		"native-base": "^2.3.1",
 		"react": "16.0.0-alpha.12",
 		"react-native": "0.47.2",
