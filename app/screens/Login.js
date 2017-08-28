@@ -22,6 +22,7 @@ import material from '../../native-base-theme/variables/material';
 export default class Login extends Component {
 
   render() {
+    const { navigate } = this.props.navigation;
     return (
       <StyleProvider style={getTheme(material)}>
       <Container style={styles.container}>
@@ -48,7 +49,7 @@ export default class Login extends Component {
               </Form>
 
               <Button block style={styles.loginButton}><Text>Login</Text></Button>
-              <Button success block><Text>Daftar</Text></Button>
+              <Button success block onPress={() => navigate('Daftar')}><Text>Daftar</Text></Button>
             </Content>
           </Card>
         </Content>
