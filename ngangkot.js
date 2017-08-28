@@ -1,8 +1,8 @@
 import { StackNavigator } from 'react-navigation';
-import Main from './app/screens/Main';
+import Login from './app/screens/Login';
 
 const ngangkot = StackNavigator({
-  Main: {screen: Main}
+  Main: {screen: Login}
 }, {
   headerMode: 'screen',
   navigationOptions: {
