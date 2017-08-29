@@ -11,8 +11,7 @@ import {
     Card,
     H2,
     Icon,
-    StyleProvider,
-    Label
+    StyleProvider
 } from 'native-base';
 import { StyleSheet, Image, Alert } from 'react-native';
 import ErrorLabel from '../components/ErrorLabel';
@@ -67,7 +66,9 @@ export default class Daftar extends ValidationComponent {
                         break;
                     case "auth/email-already-in-use":
                         this.setState({
+                            password: "",
                             errors: {
+                                password: "isi password kembali",
                                 email: "email sudah digunakan"
                             }
                         });
@@ -86,7 +87,6 @@ export default class Daftar extends ValidationComponent {
             alamat: "",
             telp: "",
             password: "",
-            konfirmasi_password: ""
         });
     }
 
