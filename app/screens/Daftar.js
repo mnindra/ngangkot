@@ -14,7 +14,7 @@ import {
     StyleProvider,
     Label
 } from 'native-base';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, Alert } from 'react-native';
 import ErrorLabel from '../components/ErrorLabel';
 import getTheme from '../../native-base-theme/components';
 import material from '../../native-base-theme/variables/material';
@@ -30,21 +30,12 @@ export default class Daftar extends ValidationComponent {
             alamat: "",
             telp: "",
             password: "",
-            konfirmasi_password: ""
+            errors: {}
         }
     }
 
     daftar () {
-        this.validate({
-            nama: {required: true},
-            email: {required: true},
-            alamat: {required: true},
-            telp: {required: true},
-            password: {required: true}
-        });
-
-        this.forceUpdate();
-
+        this.validasiForm();
         if (this.isFormValid()) {
             firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(() => {
                 let d = new Date();
@@ -84,6 +75,28 @@ export default class Daftar extends ValidationComponent {
         });
     }
 
+    validasiForm() {
+        this.validate({
+            nama: {required: true},
+            email: {required: true},
+            alamat: {required: true},
+            telp: {required: true},
+            password: {required: true}
+        });
+
+        let errors = {};
+        let errors_string = this.getErrorMessages().split("\n");
+        errors_string.forEach((error) => {
+            for (let key in this.state) {
+                if (error.indexOf(key) !== -1) {
+                    errors[key] = error;
+                }
+            }
+        });
+
+        this.setState({errors});
+    }
+
     render() {
         const {goBack} = this.props.navigation;
         return (
@@ -107,6 +120,7 @@ export default class Daftar extends ValidationComponent {
                                         value={this.state.nama}
                                         onChangeText={(text) => this.setState({nama: text})} />
                                   </Item>
+                                  <ErrorLabel error={this.state.errors.nama} />
 
                                   <Item floatingLabel error={this.isFieldInError('email')}>
                                       <Icon name="email" style={{color:'#4c4c4c'}}/>
@@ -116,6 +130,7 @@ export default class Daftar extends ValidationComponent {
                                         onChangeText={(text) => this.setState({email: text})}
                                         keyboardType={"email-address"}/>
                                   </Item>
+                                  <ErrorLabel error={this.state.errors.email} />
 
                                   <Item floatingLabel error={this.isFieldInError('alamat')}>
                                       <Icon name="location-on" style={{color:'#4c4c4c'}}/>
@@ -124,6 +139,7 @@ export default class Daftar extends ValidationComponent {
                                         value={this.state.alamat}
                                         onChangeText={(text) => this.setState({alamat: text})} />
                                   </Item>
+                                  <ErrorLabel error={this.state.errors.alamat} />
 
                                   <Item floatingLabel error={this.isFieldInError('telp')}>
                                       <Icon name="smartphone" style={{color:'#4c4c4c'}}/>
@@ -132,8 +148,9 @@ export default class Daftar extends ValidationComponent {
                                         value={this.state.telp}
                                         onChangeText={(text) => this.setState({telp: text})}
                                         keyboardType={"numeric"}/>
-
                                   </Item>
+                                  <ErrorLabel error={this.state.errors.telp} />
+
                                   <Item floatingLabel error={this.isFieldInError('password')}>
                                       <Icon name="lock" style={{color:'#4c4c4c'}}/>
                                       <Input
@@ -142,15 +159,7 @@ export default class Daftar extends ValidationComponent {
                                         onChangeText={(text) => this.setState({password: text})}
                                         secureTextEntry={true}/>
                                   </Item>
-
-                                  {/*<Item floatingLabel>*/}
-                                      {/*<Icon name="lock" style={{color:'#4c4c4c'}}/>*/}
-                                      {/*<Input*/}
-                                        {/*placeholder="Konfirmasi Password"*/}
-                                        {/*value={this.state.konfirmasi_password}*/}
-                                        {/*onChangeText={(text) => this.setState({konfirmasi_password: text})}*/}
-                                        {/*secureTextEntry={true} />*/}
-                                  {/*</Item>*/}
+                                  <ErrorLabel error={this.state.errors.password} />
                               </Form>
 
                               <Button
@@ -168,8 +177,6 @@ export default class Daftar extends ValidationComponent {
                                 style={{backgroundColor: '#ff4336'}}>
                                   <Text>Batal</Text>
                               </Button>
-
-                              <Text>{ this.getErrorMessages() }</Text>
                           </Content>
                       </Card>
                   </Content>

@@ -7,23 +7,10 @@ import { StyleSheet } from 'react-native';
 
 export default class ErrorLabel extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state({
-           error: ""
-        });
-    }
-
-    componentDidMount() {
-        this.setState({
-           error: this.props.errors.split("\n")[0]
-        });
-    }
-
     render () {
         return (
           <Content style={styles.Content}>
-              <Text style={styles.Text}>{this.state.error}</Text>
+              <Text style={styles.Text}>{this.props.error}</Text>
           </Content>
         );
     }

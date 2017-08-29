@@ -4,9 +4,9 @@ import Daftar from './app/screens/Daftar';
 import FotoProfil from './app/screens/FotoProfil';
 
 const ngangkot = StackNavigator({
+    Daftar: {screen: Daftar},
     FotoProfil: {screen: FotoProfil},
     Login: {screen: Login},
-    Daftar: {screen: Daftar},
 }, {
     headerMode: 'screen',
     navigationOptions: {
