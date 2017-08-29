@@ -60,6 +60,21 @@ export default class Daftar extends ValidationComponent {
                 });
                 this.resetInput();
                 this.props.navigation.navigate('FotoProfil');
+            }).catch((error) => {
+                switch (error.code) {
+                    case "auth/network-request-failed":
+                        Alert.alert("Koneksi Gagal", "Cek koneksi internet anda");
+                        break;
+                    case "auth/email-already-in-use":
+                        this.setState({
+                            errors: {
+                                email: "email sudah digunakan"
+                            }
+                        });
+                        break;
+                    default:
+                        Alert.alert("Terjadi Kesalahan", "Kesalahan tidak diketahui");
+                }
             });
         }
     }
@@ -78,10 +93,10 @@ export default class Daftar extends ValidationComponent {
     validasiForm() {
         this.validate({
             nama: {required: true},
-            email: {required: true},
+            email: {required: true, email: true},
             alamat: {required: true},
-            telp: {required: true},
-            password: {required: true}
+            telp: {required: true, numbers: true},
+            password: {required: true, minlength: 6}
         });
 
         let errors = {};
@@ -98,7 +113,6 @@ export default class Daftar extends ValidationComponent {
     }
 
     render() {
-        const {goBack} = this.props.navigation;
         return (
           <StyleProvider style={getTheme(material)}>
               <Container style={styles.container}>
@@ -173,7 +187,7 @@ export default class Daftar extends ValidationComponent {
                               <Button
                                 danger
                                 block
-                                onPress={() => goBack()}
+                                onPress={() => this.props.navigation.navigate('Login')}
                                 style={{backgroundColor: '#ff4336'}}>
                                   <Text>Batal</Text>
                               </Button>
