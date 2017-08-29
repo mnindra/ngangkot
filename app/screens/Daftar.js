@@ -68,6 +68,7 @@ export default class Daftar extends ValidationComponent {
                     tanggal: `${tanggal}/${bulan}/${tahun}`
                 });
                 this.resetInput();
+                this.props.navigation.navigate('FotoProfil');
             });
         }
     }
