@@ -4,40 +4,44 @@ import {
     Content,
     Button,
     Text,
-    Form,
-    Item,
-    Input,
     Card,
-    CardItem,
-    Label,
     H2,
     Icon,
-    Thumbnail,
+    Grid,
+    Col,
     StyleProvider
 } from 'native-base';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, Alert } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import getTheme from '../../native-base-theme/components';
 import material from '../../native-base-theme/variables/material';
+import firebase from '../config/firebase';
+import blobUtil from 'blob-util';
 
 export default class FotoProfil extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-           image: '../images/foto profil.jpg'
+            image: {},
+            imagePath: 'http://via.placeholder.com/300x300'
         };
     }
 
     BukaGaleri () {
         ImagePicker.openPicker({
             width: 300,
-            height: 400,
+            height: 300,
+            cropperActiveWidgetColor: '#484fff',
+            cropperToolbarColor: '#5b82ff',
             cropping: true
         }).then(image => {
             this.setState({
-                image: image.path
+                image: image.data,
+                imagePath: image.path
             });
+
+            Alert.alert('base64', image.data);
         });
     }
 
@@ -48,35 +52,80 @@ export default class FotoProfil extends Component {
             cropping: true
         }).then(image => {
             this.setState({
-                image: image.path
+                image: image.data,
+                imagePath: image.path
             });
         });
     }
 
+    UploadFoto() {
+        firebase.storage().ref("penumpang/user.jpg").putString(this.state.image.split(',')[1]).then(() => {
+            // this.props.navigation.navigate();
+            alert('berhasil upload');
+        });
+    }
+
     render() {
-        const { navigate } = this.props.navigation;
         return (
           <StyleProvider style={getTheme(material)}>
               <Container style={styles.container}>
                   <Content padder>
 
-                      <Card style={styles.card} transparent>
-                          <Content padder>
-                              <Text style={styles.formText}>Pilih Foto Profil</Text>
-                              <Image source={{uri: this.state.image}} />
+                      <H2 style={styles.title}>Pilih Foto Profil</H2>
 
-                              <Button
-                                block
-                                style={styles.loginButton}
-                                onPress={() => this.BukaGaleri()}>
-                                  <Text>Galeri</Text>
-                              </Button>
-                              <Button
-                                success
-                                block
-                                onPress={() => this.BukaCamera()}><Text>Kamera</Text></Button>
+                      <Card>
+                          <Content padder>
+                              <Image style={styles.image} source={{ isStatic:true, uri:this.state.imagePath }} />
+
+                              <Grid>
+                                  <Col style={{width: '50%', paddingRight: 5}}>
+                                      <Button
+                                        danger
+                                        block
+                                        bordered
+                                        iconLeft
+                                        onPress={() => this.BukaCamera()}>
+                                          <Icon name="photo-camera" />
+                                          <Text>Kamera</Text>
+                                      </Button>
+                                  </Col>
+                                  <Col style={{width: '50%', paddingLeft: 5}}>
+                                      <Button
+                                        success
+                                        block
+                                        bordered
+                                        iconLeft
+                                        onPress={() => this.BukaGaleri()}>
+                                          <Icon name="collections" />
+                                          <Text>Galeri</Text>
+                                      </Button>
+                                  </Col>
+                              </Grid>
+
                           </Content>
                       </Card>
+
+                      <Grid style={{marginTop:10}}>
+                          <Col style={{width: '50%', paddingRight: 5}}>
+                              <Button
+                                primary
+                                block
+                                onPress={() => this.UploadFoto()}>
+                                  <Text>Gunakan Foto</Text>
+                              </Button>
+                          </Col>
+                          <Col style={{width: '50%', paddingLeft: 5}}>
+                              <Button
+                                danger
+                                block
+                                onPress={() => this.props.navigation.navigate('')}>
+                                  <Text>Lewati</Text>
+                              </Button>
+                          </Col>
+                      </Grid>
+
+
+
                   </Content>
               </Container>
           </StyleProvider>
@@ -90,27 +139,16 @@ const styles = StyleSheet.create({
     title: {
         color: '#fff',
         textAlign: 'center',
+        marginTop: 20,
         marginBottom: 20,
         fontSize: 30,
         height: 35
     },
-    form: {
-        marginBottom: 20
-    },
-    formText: {
-        color: '#5f5f5f',
-        textAlign: 'center'
-    },
-    loginButton: {
-        marginBottom: 10,
-        backgroundColor: '#5c98ed'
-    },
-    logo: {
-        marginLeft: 'auto',
+    image: {
+        width: '100%',
+        height: 300,
         marginRight: 'auto',
-        marginTop: 20
-    },
-    card: {
-        paddingTop: 20
+        marginLeft: 'auto',
+        marginBottom: 10
     }
 });
