@@ -55,8 +55,6 @@ export default class FotoProfil extends Component {
                 image: image.data,
                 imagePath: image.path
             });
-
-            Alert.alert("base64", this.state.image.trim());
         });
     }
 
@@ -69,7 +67,8 @@ export default class FotoProfil extends Component {
             window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
             window.Blob = Blob;
 
-            const imageRef = firebase.storage().ref("penumpang/user.jpg");
+            let uid = firebase.auth().currentUser.uid;
+            const imageRef = firebase.storage().ref("penumpang/" + uid + ".jpg");
             let mime = 'image/jpg';
             fs.readFile(this.state.imagePath, 'base64').then((data) => {
                 return Blob.build(data, {type: `${mime};BASE64`})
