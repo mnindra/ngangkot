@@ -52,7 +52,7 @@ export default class Main extends Component {
           <StyleProvider style={getTheme(material)}>
               <Container>
 
-                  <Header>
+                  <Header noShadow>
                       <Left>
                           <Button transparent>
                               <Icon name="menu" />
