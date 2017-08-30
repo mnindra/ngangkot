@@ -35,9 +35,22 @@ export default class Login extends ValidationComponent {
 
         if (this.isFormValid()) {
             firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then(() => {
-                this.resetInput();
-              // this.props.navigation.navigate('');
-                Alert.alert("berhasil login");
+                let uid = firebase.auth().currentUser.uid;
+                firebase.database().ref("penumpang/" + uid).once("value").then((snapshot) => {
+                    if(snapshot.val()) {
+                       this.resetInput();
+                       // this.props.navigation.navigate('');
+                       Alert.alert("berhasil login");
+                   } else {
+                       this.setState({
+                           password: "",
+                           errors: {
+                               email: "email tidak ditemukan"
+                           }
+                       });
+                       firebase.auth().signOut();
+                   }
+                });
             }).catch((error) => {
                 Alert.alert("kesalahan", error.code);
                 switch (error.code) {
