@@ -39,8 +39,7 @@ export default class Login extends ValidationComponent {
                 firebase.database().ref("penumpang/" + uid).once("value").then((snapshot) => {
                     if(snapshot.val()) {
                        this.resetInput();
-                       // this.props.navigation.navigate('');
-                       Alert.alert("berhasil login");
+                       this.props.navigation.navigate('Main');
                    } else {
                        this.setState({
                            password: "",

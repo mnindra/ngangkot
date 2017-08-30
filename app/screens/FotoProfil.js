@@ -74,6 +74,8 @@ export default class FotoProfil extends Component {
                 return Blob.build(data, {type: `${mime};BASE64`})
             }).then((blob) => {
                 return imageRef.put(blob, { contentType: mime })
+            }).then(() => {
+                this.props.navigation.navigate('Main');
             }).catch((error) => {
                 console.log(error);
             });
