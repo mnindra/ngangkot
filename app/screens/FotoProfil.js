@@ -16,14 +16,14 @@ import ImagePicker from 'react-native-image-crop-picker';
 import getTheme from '../../native-base-theme/components';
 import material from '../../native-base-theme/variables/material';
 import firebase from '../config/firebase';
-import blobUtil from 'blob-util';
+import RNFetchBlob from 'react-native-fetch-blob'
 
 export default class FotoProfil extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            image: {},
+            image: '',
             imagePath: 'http://via.placeholder.com/300x300'
         };
     }
@@ -34,14 +34,13 @@ export default class FotoProfil extends Component {
             height: 300,
             cropperActiveWidgetColor: '#484fff',
             cropperToolbarColor: '#5b82ff',
-            cropping: true
+            cropping: true,
+            includeBase64: true
         }).then(image => {
             this.setState({
                 image: image.data,
                 imagePath: image.path
             });
-
-            Alert.alert('base64', image.data);
         });
     }
 
@@ -49,20 +48,37 @@ export default class FotoProfil extends Component {
         ImagePicker.openCamera({
             width: 300,
             height: 400,
-            cropping: true
+            cropping: true,
+            includeBase64: true
         }).then(image => {
             this.setState({
                 image: image.data,
                 imagePath: image.path
             });
+
+            Alert.alert("base64", this.state.image.trim());
         });
     }
 
     UploadFoto() {
-        firebase.storage().ref("penumpang/user.jpg").putString(this.state.image.split(',')[1]).then(() => {
-            // this.props.navigation.navigate();
-            alert('berhasil upload');
-        });
+        if (this.state.image == '') {
+            Alert.alert("Foto Profil", "Pilih foto profil terlebih dahulu");
+        } else {
+            const Blob = RNFetchBlob.polyfill.Blob;
+            const fs = RNFetchBlob.fs;
+            window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
+            window.Blob = Blob;
+
+            const imageRef = firebase.storage().ref("penumpang/user.jpg");
+            let mime = 'image/jpg';
+            fs.readFile(this.state.imagePath, 'base64').then((data) => {
+                return Blob.build(data, {type: `${mime};BASE64`})
+            }).then((blob) => {
+                return imageRef.put(blob, { contentType: mime })
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
     }
 
     render() {
@@ -123,8 +139,6 @@ export default class FotoProfil extends Component {
                               </Button>
                           </Col>
                       </Grid>
-
-
 
                   </Content>
               </Container>
