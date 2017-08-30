@@ -20,7 +20,7 @@ export default class Langganan extends Component {
                   </ListItem>
                   <ListItem avatar style={{paddingTop:10, paddingBottom: 10}}>
                       <Left>
-                          <Thumbnail source={{ uri: 'http://placehold.it/300x300' }} />
+                          <Thumbnail square source={{ uri: 'http://placehold.it/300x300' }} />
                       </Left>
                       <Body>
                       <Text>Aron Nelsom</Text>
@@ -28,7 +28,7 @@ export default class Langganan extends Component {
                   </ListItem>
                   <ListItem avatar style={{paddingTop:10, paddingBottom: 10}}>
                       <Left>
-                          <Thumbnail source={{ uri: 'http://placehold.it/300x300' }} />
+                          <Thumbnail square source={{ uri: 'http://placehold.it/300x300' }} />
                       </Left>
                       <Body>
                       <Text>Ali Connor</Text>
@@ -40,7 +40,7 @@ export default class Langganan extends Component {
                   </ListItem>
                   <ListItem avatar style={{paddingTop:10, paddingBottom: 10}}>
                       <Left>
-                          <Thumbnail source={{ uri: 'http://placehold.it/300x300' }} />
+                          <Thumbnail square source={{ uri: 'http://placehold.it/300x300' }} />
                       </Left>
                       <Body>
                       <Text>Beny Nelson</Text>
