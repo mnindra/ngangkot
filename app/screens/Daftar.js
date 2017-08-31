@@ -121,6 +121,10 @@ export default class Daftar extends ValidationComponent {
                       <H2 style={styles.title}>
                           Ngangkot
                       </H2>
+                      <Text
+                        style={{textAlign: 'center', color: '#fff', marginBottom: 20}}>
+                          Penumpang
+                      </Text>
 
                       <Card style={styles.card} transparent>
                           <Content padder>
@@ -207,7 +211,6 @@ const styles = StyleSheet.create({
     title: {
         color: '#fff',
         textAlign: 'center',
-        marginBottom: 20,
         fontSize: 30,
         height: 35
     },
