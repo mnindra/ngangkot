@@ -12,7 +12,6 @@ import {
     Col
 } from 'native-base';
 import {StyleSheet, Image, TouchableOpacity} from 'react-native';
-import firebase from '../config/firebase';
 
 export default class Profil extends Component {
 
@@ -52,7 +51,11 @@ export default class Profil extends Component {
               <Content style={styles.bottom} padder>
                   <Grid>
                       <Col style={{paddingRight: 5}}>
-                          <Button primary block bordered>
+                          <Button
+                            primary
+                            block
+                            bordered
+                            onPress={() => this.props.parent.props.navigation.navigate('UbahProfil', {user:this.props.user})}>
                               <Text>Ubah Profil</Text>
                           </Button>
                       </Col>
