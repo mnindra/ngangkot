@@ -37,7 +37,8 @@ export default class Login extends ValidationComponent {
             firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then(() => {
                 let uid = firebase.auth().currentUser.uid;
                 firebase.database().ref("penumpang/" + uid).once("value").then((snapshot) => {
-                    if(snapshot.val()) {
+                    if (snapshot.val()) {
+                        firebase.database().ref("penumpang/" + uid).update({online: 1});
                        this.resetInput();
                        this.props.navigation.navigate('Main');
                    } else {
@@ -126,6 +127,7 @@ export default class Login extends ValidationComponent {
                         <Input
                           placeholder="Email"
                           value={this.state.email}
+                          keyboardType={"email-address"}
                           onChangeText={(text) => this.setState({email: text})}/>
                       </Item>
                       <ErrorLabel error={this.state.errors.email} />
