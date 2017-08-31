@@ -23,25 +23,65 @@ import getTheme from '../../native-base-theme/components';
 import material from '../../native-base-theme/variables/material';
 import firebase from '../config/firebase';
 
-export default class UbahProfil extends ValidationComponent {
+export default class UbahPassword extends ValidationComponent {
 
     constructor (props) {
         super(props);
         this.state = {
-            nama: this.props.navigation.state.params.user.nama,
-            alamat: this.props.navigation.state.params.user.alamat,
-            telp: this.props.navigation.state.params.user.telp,
+            password: '',
+            'password baru': '',
+            'konfirmasi password': '',
             errors: {}
         }
     }
 
+    periksaPassword() {
+        firebase.database().ref("penumpang/" + this.props.navigation.state.params.user.id_penumpang).once("value").then((snapshot) => {
+            if (snapshot.val().password == this.state.password) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+    }
+
     ubah () {
         this.validasiForm();
+
+        if(!this.isFormValid()) {
+            return 0;
+        }
+
+        if(!this.periksaPassword()) {
+            this.setState({
+                password: '',
+                'password baru': '',
+                'konfirmasi password': '',
+                errors: {
+                    'password': 'password salah'
+                }
+            });
+            return 0;
+        }
+
+        if(this.state['password baru'] != this.state['konfirmasi password']) {
+            this.setState({
+                password: '',
+                'password baru': '',
+                'konfirmasi password': '',
+                errors: {
+                   'konfirmasi password': 'konfirmasi password salah'
+               }
+            });
+
+            return 0;
+        }
+
         if (this.isFormValid()) {
-            firebase.database().ref('penumpang/' + this.props.navigation.state.params.user.id_penumpang).update({
-                nama: this.state.nama,
-                alamat: this.state.alamat,
-                telp: this.state.telp,
+            firebase.database().ref('penumpang/' + this.props.navigation.state.params.user.id_penumpang).set({
+                password: this.state['password baru'],
+            }).then(() => {
+                return firebase.auth().currentUser.updatePassword(this.state['password baru']);
             }).then(() => {
                 this.props.navigation.navigate('Main');
             }).catch((error) => {
@@ -58,9 +98,9 @@ export default class UbahProfil extends ValidationComponent {
 
     validasiForm() {
         this.validate({
-            nama: {required: true},
-            alamat: {required: true},
-            telp: {required: true, numbers: true},
+            'password': {required: true, minlength: 6},
+            'password baru': {required: true, minlength: 6},
+            'konfirmasi password': {required: true, minlength: 6},
         });
 
         let errors = {};
@@ -88,39 +128,41 @@ export default class UbahProfil extends ValidationComponent {
                           </Button>
                       </Left>
                       <Body>
-                      <Title>Ubah Profil</Title>
+                      <Title>Ubah Password</Title>
                       </Body>
                   </Header>
                   <Content padder>
 
                       <Form style={styles.form}>
-                          <Item floatingLabel error={this.isFieldInError('nama')}>
-                              <Icon name="person" style={{color:'#4c4c4c'}}/>
+                          <Item floatingLabel error={this.isFieldInError('password')}>
+                              <Icon name="lock" style={{color:'#4c4c4c'}}/>
                               <Input
-                                placeholder="Nama"
-                                value={this.state.nama}
-                                onChangeText={(text) => this.setState({nama: text})} />
+                                placeholder="Password"
+                                value={this.state.password}
+                                onChangeText={(text) => this.setState({password: text})}
+                                secureTextEntry={true}/>
                           </Item>
-                          <ErrorLabel error={this.state.errors.nama} />
+                          <ErrorLabel error={this.state.errors.password} />
 
-                          <Item floatingLabel error={this.isFieldInError('alamat')}>
-                              <Icon name="location-on" style={{color:'#4c4c4c'}}/>
+                          <Item floatingLabel error={this.isFieldInError('password baru')}>
+                              <Icon name="lock" style={{color:'#4c4c4c'}}/>
                               <Input
-                                placeholder="Alamat"
-                                value={this.state.alamat}
-                                onChangeText={(text) => this.setState({alamat: text})} />
+                                placeholder="Password Baru"
+                                value={this.state['password baru']}
+                                onChangeText={(text) => this.setState({'password baru': text})}
+                                secureTextEntry={true}/>
                           </Item>
-                          <ErrorLabel error={this.state.errors.alamat} />
+                          <ErrorLabel error={this.state.errors['password baru']} />
 
-                          <Item floatingLabel error={this.isFieldInError('telp')}>
-                              <Icon name="smartphone" style={{color:'#4c4c4c'}}/>
+                          <Item floatingLabel error={this.isFieldInError('konfirmasi password')}>
+                              <Icon name="lock" style={{color:'#4c4c4c'}}/>
                               <Input
-                                placeholder="Nomor Telepon"
-                                value={this.state.telp}
-                                onChangeText={(text) => this.setState({telp: text})}
-                                keyboardType={"numeric"}/>
+                                placeholder="Konfirmasi Password"
+                                value={this.state['konfirmasi password']}
+                                onChangeText={(text) => this.setState({'konfirmasi password': text})}
+                                secureTextEntry={true}/>
                           </Item>
-                          <ErrorLabel error={this.state.errors.telp} />
+                          <ErrorLabel error={this.state.errors['konfirmasi password']} />
                       </Form>
 
                       <Button

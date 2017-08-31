@@ -61,7 +61,11 @@ export default class Profil extends Component {
                       </Col>
 
                       <Col style={{paddingLeft: 5}}>
-                          <Button danger block bordered>
+                          <Button
+                            danger
+                            block
+                            bordered
+                            onPress={() => this.props.parent.props.navigation.navigate('UbahPassword', {user:this.props.user})}>
                               <Text>Ubah Password</Text>
                           </Button>
                       </Col>
