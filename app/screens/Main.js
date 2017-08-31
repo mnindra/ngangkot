@@ -14,6 +14,7 @@ import {
     Text,
     Title
 } from 'native-base';
+import { Alert } from 'react-native';
 import getTheme from '../../native-base-theme/components';
 import material from '../../native-base-theme/variables/material';
 import Peta from './Peta';
@@ -27,13 +28,37 @@ export default class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeTab: 'peta'
+            activeTab: 'peta',
+            userDB: '',
+            userImg: 'http://placehold.it/300x300'
         };
     }
 
     Logout() {
         firebase.auth().signOut();
         this.props.navigation.navigate('Login');
+    }
+
+    componentDidMount() {
+        firebase.auth().onAuthStateChanged((user) => {
+            if(user) {
+                firebase.database().ref("penumpang/" + user.uid).once("value").then((snapshot) => {
+                    this.setState({
+                        userDB: snapshot.val()
+                    });
+                });
+
+                firebase.storage().ref('penumpang/' + user.uid + '.jpg').getDownloadURL().then((url) => {
+                    this.setState({
+                        userImg: url
+                    });
+                }).catch((error) => {
+                    this.setState({
+                        userImg: 'http://placehold.it/300x300'
+                    });
+                });
+            }
+        });
     }
 
     render() {
@@ -50,7 +75,7 @@ export default class Main extends Component {
                 content = <Langganan />;
                 break;
             case 'profil':
-                content = <Profil />;
+                content = <Profil parent={this} user={this.state.userDB} image={this.state.userImg} />;
                 break;
         }
 

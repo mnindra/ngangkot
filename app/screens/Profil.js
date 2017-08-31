@@ -11,52 +11,22 @@ import {
     Grid,
     Col
 } from 'native-base';
-import {StyleSheet, Image} from 'react-native';
+import {StyleSheet, Image, TouchableOpacity} from 'react-native';
 import firebase from '../config/firebase';
 
 export default class Profil extends Component {
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            nama: '',
-            email: '',
-            alamat: '',
-            telp: '',
-            foto: 'http://placehold.it/300x300',
-        }
-    }
-
     render () {
-        firebase.auth().onAuthStateChanged((user) => {
-            firebase.database().ref('penumpang/' + user.uid).once('value').then((snapshot) => {
-                let user = snapshot.val();
-                this.setState({
-                    nama: user.nama,
-                    email: user.email,
-                    alamat: user.alamat,
-                    telp: user.telp,
-                });
-            });
-
-            firebase.storage().ref('penumpang/' + user.uid + '.jpg').getDownloadURL().then((url) => {
-                this.setState({
-                    foto: url
-                });
-            }).catch((error) => {
-                this.setState({
-                    foto: 'http://placehold.it/300x300'
-                });
-            });
-        })
-
         return (
           <Content>
               <Content style={styles.top}>
-                  <Image style={styles.image} source={{uri: this.state.foto}} />
-                  <Text style={styles.textTop}>{this.state.nama}</Text>
-                  <Text style={styles.textTop}>{this.state.email}</Text>
+                  <TouchableOpacity
+                    onPress={() => this.props.parent.props.navigation.navigate('UbahFoto', {image:this.props.image})}>
+                      <Image style={styles.image} source={{uri: this.props.image}} />
+                  </TouchableOpacity>
+
+                  <Text style={styles.textTop}>{this.props.user.nama}</Text>
+                  <Text style={styles.textTop}>{this.props.user.email}</Text>
               </Content>
               <Content style={styles.center}>
                   <List>
@@ -65,7 +35,7 @@ export default class Profil extends Component {
                             <Icon name="place" style={styles.textCenter} />
                         </Left>
                           <Body>
-                            <Text style={styles.textCenter}>{this.state.alamat}</Text>
+                            <Text style={styles.textCenter}>{this.props.user.alamat}</Text>
                           </Body>
                       </ListItem>
 
@@ -74,7 +44,7 @@ export default class Profil extends Component {
                               <Icon name="smartphone" style={styles.textCenter} />
                           </Left>
                           <Body>
-                          <Text style={styles.textCenter}>{this.state.telp}</Text>
+                          <Text style={styles.textCenter}>{this.props.user.telp}</Text>
                           </Body>
                       </ListItem>
                   </List>
