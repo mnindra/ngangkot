@@ -28,7 +28,7 @@ export default class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeTab: 'peta',
+            activeTab: this.props.navigation.state.params ? this.props.navigation.state.params.activeTab : "peta",
             userDB: '',
             userImg: 'http://placehold.it/300x300'
         };

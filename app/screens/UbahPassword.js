@@ -83,7 +83,7 @@ export default class UbahPassword extends ValidationComponent {
             }).then(() => {
                 return firebase.auth().currentUser.updatePassword(this.state['password baru']);
             }).then(() => {
-                this.props.navigation.navigate('Main');
+                this.props.navigation.navigate('Main', {activeTab: 'profil'});
             }).catch((error) => {
                 switch (error.code) {
                     case "auth/network-request-failed":

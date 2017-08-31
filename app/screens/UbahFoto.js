@@ -79,7 +79,7 @@ export default class UbahFoto extends Component {
             }).then((blob) => {
                 return imageRef.put(blob, { contentType: mime })
             }).then(() => {
-                this.props.navigation.navigate('Main');
+                this.props.navigation.navigate('Main', {activeTab: 'profil'});
             }).catch((error) => {
                 console.log(error);
             });

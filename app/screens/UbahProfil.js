@@ -43,7 +43,7 @@ export default class UbahProfil extends ValidationComponent {
                 alamat: this.state.alamat,
                 telp: this.state.telp,
             }).then(() => {
-                this.props.navigation.navigate('Main');
+                this.props.navigation.navigate('Main', {activeTab: 'profil'});
             }).catch((error) => {
                 switch (error.code) {
                     case "auth/network-request-failed":
