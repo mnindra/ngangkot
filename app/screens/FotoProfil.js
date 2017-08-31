@@ -135,7 +135,7 @@ export default class FotoProfil extends Component {
                               <Button
                                 danger
                                 block
-                                onPress={() => this.props.navigation.navigate('')}>
+                                onPress={() => this.props.navigation.navigate('Main')}>
                                   <Text>Lewati</Text>
                               </Button>
                           </Col>

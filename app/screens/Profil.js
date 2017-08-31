@@ -12,16 +12,53 @@ import {
     Col
 } from 'native-base';
 import {StyleSheet, Image} from 'react-native';
+import firebase from '../config/firebase';
 
 export default class Profil extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            nama: '',
+            email: '',
+            alamat: '',
+            telp: '',
+            foto: 'http://placehold.it/300x300',
+        }
+    }
+
+    componentDidMount() {
+        firebase.auth().onAuthStateChanged((user) => {
+            firebase.database().ref('penumpang/' + user.uid).once('value').then((snapshot) => {
+                let user = snapshot.val();
+                this.setState({
+                    nama: user.nama,
+                    email: user.email,
+                    alamat: user.alamat,
+                    telp: user.telp,
+                });
+            });
+
+            firebase.storage().ref('penumpang/' + user.uid + '.jpg').getDownloadURL().then((url) => {
+                this.setState({
+                    foto: url
+                });
+            }).catch((error) => {
+                this.setState({
+                   foto: 'http://placehold.it/300x300'
+                });
+            });
+        })
+    }
 
     render () {
         return (
           <Content>
               <Content style={styles.top}>
-                  <Image style={styles.image} source={{uri: 'http://placehold.it/300x300'}} />
-                  <Text style={styles.textTop}>Nindra Zaka</Text>
-                  <Text style={styles.textTop}>mnindrazaka@gmail.com</Text>
+                  <Image style={styles.image} source={{uri: this.state.foto}} />
+                  <Text style={styles.textTop}>{this.state.nama}</Text>
+                  <Text style={styles.textTop}>{this.state.email}</Text>
               </Content>
               <Content style={styles.center}>
                   <List>
@@ -30,7 +67,7 @@ export default class Profil extends Component {
                             <Icon name="place" style={styles.textCenter} />
                         </Left>
                           <Body>
-                            <Text style={styles.textCenter}>Probolinggo</Text>
+                            <Text style={styles.textCenter}>{this.state.alamat}</Text>
                           </Body>
                       </ListItem>
 
@@ -39,7 +76,7 @@ export default class Profil extends Component {
                               <Icon name="smartphone" style={styles.textCenter} />
                           </Left>
                           <Body>
-                          <Text style={styles.textCenter}>085331247098</Text>
+                          <Text style={styles.textCenter}>{this.state.telp}</Text>
                           </Body>
                       </ListItem>
                   </List>

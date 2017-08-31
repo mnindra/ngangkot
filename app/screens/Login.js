@@ -51,7 +51,6 @@ export default class Login extends ValidationComponent {
                    }
                 });
             }).catch((error) => {
-                Alert.alert("kesalahan", error.code);
                 switch (error.code) {
                     case "auth/network-request-failed":
                         Alert.alert("Koneksi Gagal", "Cek koneksi internet anda");
