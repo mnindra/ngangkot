@@ -38,7 +38,6 @@ export default class Main extends Component {
         firebase.database().ref('penumpang/' + this.state.userDB.id_penumpang).update({online: 0});
         firebase.auth().signOut();
         this.props.navigation.navigate('Login');
-
     }
 
     componentDidMount() {
@@ -47,16 +46,6 @@ export default class Main extends Component {
                 firebase.database().ref("penumpang/" + user.uid).once("value").then((snapshot) => {
                     this.setState({
                         userDB: snapshot.val()
-                    });
-                });
-
-                firebase.storage().ref('penumpang/' + user.uid + '.jpg').getDownloadURL().then((url) => {
-                    this.setState({
-                        userImg: url
-                    });
-                }).catch((error) => {
-                    this.setState({
-                        userImg: 'http://placehold.it/300x300'
                     });
                 });
             }
@@ -74,10 +63,10 @@ export default class Main extends Component {
                 content = <Pesan />;
                 break;
             case 'langganan':
-                content = <Langganan />;
+                content = <Langganan parent={this} user={this.state.userDB} />;
                 break;
             case 'profil':
-                content = <Profil parent={this} user={this.state.userDB} image={this.state.userImg} />;
+                content = <Profil parent={this} user={this.state.userDB} />;
                 break;
         }
 

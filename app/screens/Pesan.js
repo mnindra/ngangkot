@@ -13,7 +13,7 @@ export default class Pesan extends Component {
 
     render () {
         return (
-          <Content>
+          <Content style={{backgroundColor: '#fff'}}>
               <List>
                   <ListItem>
                       <Thumbnail square size={80} source={{ uri: 'http://placehold.it/300x300' }} />
