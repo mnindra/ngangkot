@@ -79,6 +79,9 @@ export default class UbahFoto extends Component {
             }).then((blob) => {
                 return imageRef.put(blob, { contentType: mime })
             }).then(() => {
+              return imageRef.getDownloadURL();
+            }).then((url) => {
+                firebase.database().ref('penumpang/' + uid).update({foto: url});
                 this.props.navigation.navigate('Main', {activeTab: 'profil'});
             }).catch((error) => {
                 console.log(error);

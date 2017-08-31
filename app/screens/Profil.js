@@ -16,12 +16,15 @@ import {StyleSheet, Image, TouchableOpacity} from 'react-native';
 export default class Profil extends Component {
 
     render () {
+
+        let placehold = 'http://placehold.it/300x300';
+
         return (
           <Content>
               <Content style={styles.top}>
                   <TouchableOpacity
-                    onPress={() => this.props.parent.props.navigation.navigate('UbahFoto', {image:this.props.image})}>
-                      <Image style={styles.image} source={{uri: this.props.image}} />
+                    onPress={() => this.props.parent.props.navigation.navigate('UbahFoto', {image:this.props.user.foto || placehold})}>
+                      <Image style={styles.image} source={{uri: this.props.user.foto || placehold}} />
                   </TouchableOpacity>
 
                   <Text style={styles.textTop}>{this.props.user.nama}</Text>

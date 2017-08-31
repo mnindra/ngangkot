@@ -75,6 +75,9 @@ export default class FotoProfil extends Component {
             }).then((blob) => {
                 return imageRef.put(blob, { contentType: mime })
             }).then(() => {
+                return imageRef.getDownloadURL();
+            }).then((url) => {
+                firebase.database().ref('penumpang/' + uid).update({foto: url});
                 this.props.navigation.navigate('Main');
             }).catch((error) => {
                 console.log(error);
