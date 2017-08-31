@@ -28,7 +28,7 @@ export default class Profil extends Component {
         }
     }
 
-    componentDidMount() {
+    render () {
         firebase.auth().onAuthStateChanged((user) => {
             firebase.database().ref('penumpang/' + user.uid).once('value').then((snapshot) => {
                 let user = snapshot.val();
@@ -46,13 +46,11 @@ export default class Profil extends Component {
                 });
             }).catch((error) => {
                 this.setState({
-                   foto: 'http://placehold.it/300x300'
+                    foto: 'http://placehold.it/300x300'
                 });
             });
         })
-    }
 
-    render () {
         return (
           <Content>
               <Content style={styles.top}>

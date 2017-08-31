@@ -20,6 +20,7 @@ import Peta from './Peta';
 import Pesan from './Pesan';
 import Langganan from './Langganan';
 import Profil from './Profil';
+import firebase from '../config/firebase';
 
 export default class Main extends Component {
 
@@ -28,6 +29,11 @@ export default class Main extends Component {
         this.state = {
             activeTab: 'peta'
         };
+    }
+
+    Logout() {
+        firebase.auth().signOut();
+        this.props.navigation.navigate('Login');
     }
 
     render() {
@@ -62,7 +68,7 @@ export default class Main extends Component {
                         <Title>{ this.state.activeTab.charAt(0).toUpperCase() + this.state.activeTab.slice(1) }</Title>
                       </Body>
                       <Right>
-                          <Button danger>
+                          <Button danger onPress={() => this.Logout()}>
                               <Text>Logout</Text>
                           </Button>
                       </Right>
