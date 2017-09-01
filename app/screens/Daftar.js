@@ -28,15 +28,33 @@ export default class Daftar extends ValidationComponent {
             email: "",
             alamat: "",
             telp: "",
-            password: "",
+            'password ': "",
+            'konfirmasi password': "",
             errors: {}
         }
     }
 
     daftar () {
         this.validasiForm();
+
+        if (!this.isFormValid()) {
+            return 0;
+        }
+
+        if(this.state['konfirmasi password'] != this.state['password ']) {
+            this.setState({
+                'password ': '',
+                'konfirmasi password': '',
+                errors: {
+                    'konfirmasi password': 'konfirmasi password salah'
+                }
+            })
+
+            return 0;
+        }
+
         if (this.isFormValid()) {
-            firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(() => {
+            firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state['password ']).then(() => {
                 let d = new Date();
                 let tanggal = String(d.getDate());
                 let bulan = String(d.getMonth() + 1);
@@ -48,7 +66,7 @@ export default class Daftar extends ValidationComponent {
                     email: this.state.email,
                     alamat: this.state.alamat,
                     telp: this.state.telp,
-                    password: this.state.password,
+                    password: this.state['password '],
                     blokir: 0,
                     lokasi: {
                         latitude: 0,
@@ -66,7 +84,8 @@ export default class Daftar extends ValidationComponent {
                         break;
                     case "auth/email-already-in-use":
                         this.setState({
-                            password: "",
+                            'password ': "",
+                            'konfirmasi password': "",
                             errors: {
                                 password: "isi password kembali",
                                 email: "email sudah digunakan"
@@ -86,7 +105,8 @@ export default class Daftar extends ValidationComponent {
             email: "",
             alamat: "",
             telp: "",
-            password: "",
+            'password ': "",
+            'konfirmasi password': ""
         });
     }
 
@@ -96,7 +116,8 @@ export default class Daftar extends ValidationComponent {
             email: {required: true, email: true},
             alamat: {required: true},
             telp: {required: true, numbers: true},
-            password: {required: true, minlength: 6}
+            'password ': {required: true, minlength: 6},
+            'konfirmasi password': {required: true, minlength: 6}
         });
 
         let errors = {};
@@ -169,15 +190,25 @@ export default class Daftar extends ValidationComponent {
                                   </Item>
                                   <ErrorLabel error={this.state.errors.telp} />
 
-                                  <Item floatingLabel error={this.isFieldInError('password')}>
+                                  <Item floatingLabel error={this.isFieldInError('password ')}>
                                       <Icon name="lock" style={{color:'#4c4c4c'}}/>
                                       <Input
                                         placeholder="Password"
-                                        value={this.state.password}
-                                        onChangeText={(text) => this.setState({password: text})}
+                                        value={this.state['password ']}
+                                        onChangeText={(text) => this.setState({'password ': text})}
                                         secureTextEntry={true}/>
                                   </Item>
-                                  <ErrorLabel error={this.state.errors.password} />
+                                  <ErrorLabel error={this.state.errors['password ']} />
+
+                                  <Item floatingLabel error={this.isFieldInError('konfirmasi password')}>
+                                      <Icon name="lock" style={{color:'#4c4c4c'}}/>
+                                      <Input
+                                        placeholder="Konfirmasi Password"
+                                        value={this.state['konfirmasi password']}
+                                        onChangeText={(text) => this.setState({'konfirmasi password': text})}
+                                        secureTextEntry={true}/>
+                                  </Item>
+                                  <ErrorLabel error={this.state.errors['konfirmasi password']} />
                               </Form>
 
                               <Button

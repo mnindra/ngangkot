@@ -79,7 +79,7 @@ export default class UbahFoto extends Component {
             }).then((blob) => {
                 return imageRef.put(blob, { contentType: mime })
             }).then(() => {
-              return imageRef.getDownloadURL();
+                return imageRef.getDownloadURL();
             }).then((url) => {
                 firebase.database().ref('penumpang/' + uid).update({foto: url});
                 this.props.navigation.navigate('Main', {activeTab: 'profil'});
@@ -92,7 +92,7 @@ export default class UbahFoto extends Component {
     render() {
         return (
           <StyleProvider style={getTheme(material)}>
-              <Container>
+              <Container style={{backgroundColor: '#fff'}}>
                   <Header>
                       <Left>
                           <Button transparent onPress={() => this.props.navigation.goBack()}>
@@ -105,47 +105,40 @@ export default class UbahFoto extends Component {
                   </Header>
                   <Content padder>
 
-                      <Card>
-                          <Content padder>
-                              <Image style={styles.image} source={{ isStatic:true, uri:this.state.imagePath }} />
+                      <Image style={styles.image} source={{ isStatic:true, uri:this.state.imagePath }} />
 
-                              <Grid>
-                                  <Col style={{width: '50%', paddingRight: 5}}>
-                                      <Button
-                                        danger
-                                        block
-                                        bordered
-                                        iconLeft
-                                        onPress={() => this.BukaCamera()}>
-                                          <Icon name="photo-camera" />
-                                          <Text>Kamera</Text>
-                                      </Button>
-                                  </Col>
-                                  <Col style={{width: '50%', paddingLeft: 5}}>
-                                      <Button
-                                        success
-                                        block
-                                        bordered
-                                        iconLeft
-                                        onPress={() => this.BukaGaleri()}>
-                                          <Icon name="collections" />
-                                          <Text>Galeri</Text>
-                                      </Button>
-                                  </Col>
-                              </Grid>
-
-                          </Content>
-                      </Card>
-
-                      <Button
-                        primary
-                        block
-                        style={{marginTop:10}}
-                        onPress={() => this.UploadFoto()}>
-                          <Text>Ubah Foto</Text>
-                      </Button>
-
+                      <Grid>
+                          <Col style={{width: '50%', paddingRight: 5}}>
+                              <Button
+                                danger
+                                block
+                                bordered
+                                iconLeft
+                                onPress={() => this.BukaCamera()}>
+                                  <Icon name="photo-camera" />
+                                  <Text>Kamera</Text>
+                              </Button>
+                          </Col>
+                          <Col style={{width: '50%', paddingLeft: 5}}>
+                              <Button
+                                success
+                                block
+                                bordered
+                                iconLeft
+                                onPress={() => this.BukaGaleri()}>
+                                  <Icon name="collections" />
+                                  <Text>Galeri</Text>
+                              </Button>
+                          </Col>
+                      </Grid>
                   </Content>
+                  <Button
+                    info
+                    block
+                    style={{marginTop:10}}
+                    onPress={() => this.UploadFoto()}>
+                      <Text>Ubah Foto</Text>
+                  </Button>
               </Container>
           </StyleProvider>
         );
