@@ -7,6 +7,8 @@ import {
     Left,
     Body,
     Thumbnail,
+    Right,
+    Button
 } from 'native-base';
 import {Alert} from 'react-native';
 import firebase from '../config/firebase';
@@ -20,36 +22,44 @@ export default class Langganan extends Component {
         }
     }
 
+    batal(id_pengemudi) {
+        let uid = firebase.auth().currentUser.uid;
+        firebase.database().ref('penumpang/' + uid + '/langganan/' + id_pengemudi).remove();
+    }
+
     renderRow(rowData) {
-        return(
-          <ListItem avatar style={{paddingBottom:10}}>
+        let konfirmasi = '';
+        let batal = '';
+
+        if (this.props.user.langganan[rowData.id_pengemudi].status == 0) {
+            konfirmasi = 'Belum Dikonfirmasi';
+            batal = <Button small danger onPress={() => this.batal(rowData.id_pengemudi)}><Text>Batal</Text></Button>
+        }
+
+        return (
+          <ListItem
+            avatar
+            button
+            onPress={() => this.props.parent.props.navigation.navigate('ProfilPengemudi', {pengemudi:rowData, penumpang: this.props.user})}
+            style={{paddingBottom:10}}>
               <Left>
-                  <Thumbnail square source={{ uri: 'http://placehold.it/300x300' }} />
+                  <Thumbnail square source={{ uri: rowData.foto || 'http://placehold.it/300x300' }} />
               </Left>
               <Body>
               <Text>{rowData.nama}</Text>
+              <Text note style={{color: '#b5423c'}}>{konfirmasi}</Text>
               </Body>
+              <Right>
+                  {batal}
+              </Right>
           </ListItem>
         )
-    }
-
-    componentDidMount() {
-        for (let index in this.props.user.langganan) {
-            firebase.database().ref('pengemudi/' + index).once("value").then((snapshot) => {
-                let array = this.state.pengemudi;
-                array.push(snapshot.val());
-                Alert.alert(JSON.stringify(snapshot.val()));
-                this.setState({
-                    pengemudi: array
-                });
-            });
-        }
     }
 
     render () {
         return (
           <Content style={{ backgroundColor: '#fff' }} padder>
-              <List dataArray={this.state.pengemudi} renderRow={(rowData) => this.renderRow(rowData)}>
+              <List dataArray={this.props.langganan} renderRow={(rowData) => this.renderRow(rowData)}>
               </List>
           </Content>
         )

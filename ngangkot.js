@@ -6,6 +6,7 @@ import Main from './app/screens/Main';
 import UbahFoto from './app/screens/UbahFoto';
 import UbahProfil from './app/screens/UbahProfil';
 import UbahPassword from './app/screens/UbahPassword';
+import ProfilPengemudi from './app/screens/ProfilPengemudi';
 
 console.ignoredYellowBox = [
     'Setting a timer'
@@ -19,6 +20,7 @@ const ngangkot = StackNavigator({
     UbahFoto: {screen: UbahFoto},
     UbahProfil: {screen: UbahProfil},
     UbahPassword: {screen: UbahPassword},
+    ProfilPengemudi: {screen: ProfilPengemudi}
 }, {
     headerMode: 'screen',
     navigationOptions: {
