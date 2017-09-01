@@ -36,12 +36,18 @@ export default class Profil extends Component {
             id_pengemudi: navigationProps.pengemudi.id_pengemudi,
             status: 0
         });
+        this.setState({
+            langganan: 1
+        });
     }
 
     batalLangganan() {
         let navigationProps = this.props.navigation.state.params;
         let uid = firebase.auth().currentUser.uid;
         firebase.database().ref("penumpang/" + uid + "/langganan/" + navigationProps.pengemudi.id_pengemudi).remove();
+        this.setState({
+            langganan: 0
+        });
     }
 
     componentDidMount() {
@@ -56,14 +62,13 @@ export default class Profil extends Component {
     }
 
     render () {
-
         let placehold = 'http://placehold.it/300x300';
         let navigationProps = this.props.navigation.state.params;
         let langgananBtn = '';
         if(this.state.langganan == 0) {
-            langgananBtn = <Button primary block bordered onPress={() => this.langganan()}><Text>Langganan</Text></Button>
+            langgananBtn = <Button success block onPress={() => this.langganan()}><Text>Langganan</Text></Button>
         } else {
-            langgananBtn = <Button danger block bordered onPress={() => this.batalLangganan()}><Text>Batalkan</Text></Button>
+            langgananBtn = <Button danger block  onPress={() => this.batalLangganan()}><Text>Batal Langganan</Text></Button>
         }
 
         return (
@@ -129,23 +134,18 @@ export default class Profil extends Component {
                                   <Text style={styles.textCenter}>{navigationProps.pengemudi.telp}</Text>
                                   </Body>
                               </ListItem>
-
-                              <ListItem icon last>
-                                  <Left>
-                                      <Icon name="directions-car" style={styles.textCenter} />
-                                  </Left>
-                                  <Body>
-                                  <Button primary>
-                                      <Text>lihat angkutan</Text>
-                                  </Button>
-                                  </Body>
-                              </ListItem>
                           </List>
                       </Content>
                       <Content style={styles.bottom} padder>
                           <Grid>
                               <Col style={{paddingRight: 5}}>
-                                  {langgananBtn}
+                                  <Button
+                                    primary
+                                    block
+                                    bordered
+                                    onPress={() => this.props.navigation.navigate('LihatAngkutan', {angkutan: navigationProps.pengemudi.angkutan})}>
+                                      <Text>lihat angkutan</Text>
+                                  </Button>
                               </Col>
 
                               <Col style={{paddingLeft: 5}}>
@@ -159,6 +159,7 @@ export default class Profil extends Component {
                           </Grid>
                       </Content>
                   </Content>
+                  {langgananBtn}
               </Container>
           </StyleProvider>
         )

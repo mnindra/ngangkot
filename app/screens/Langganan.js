@@ -59,8 +59,7 @@ export default class Langganan extends Component {
     render () {
         return (
           <Content style={{ backgroundColor: '#fff' }} padder>
-              <List dataArray={this.props.langganan} renderRow={(rowData) => this.renderRow(rowData)}>
-              </List>
+              <List dataArray={this.props.langganan} renderRow={(rowData) => this.renderRow(rowData)}></List>
           </Content>
         )
     }
