@@ -50,7 +50,7 @@ export default class Main extends Component {
                     });
 
                     this.setState({langganan: []});
-                    for (let index in this.state.userDB.langganan) {
+                    for (let index in snapshot.val().langganan) {
                         firebase.database().ref('pengemudi/' + index).once("value").then((snapshot) => {
                             let array = this.state.langganan;
                             array.push(snapshot.val());
