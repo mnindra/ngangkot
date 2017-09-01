@@ -30,7 +30,8 @@ export default class Main extends Component {
         this.state = {
             activeTab: this.props.navigation.state.params ? this.props.navigation.state.params.activeTab : "peta",
             userDB: '',
-            userImg: 'http://placehold.it/300x300'
+            userImg: 'http://placehold.it/300x300',
+            langganan: []
         };
     }
 
@@ -43,10 +44,21 @@ export default class Main extends Component {
     componentDidMount() {
         firebase.auth().onAuthStateChanged((user) => {
             if(user) {
-                firebase.database().ref("penumpang/" + user.uid).once("value").then((snapshot) => {
+                firebase.database().ref("penumpang/" + user.uid).on("value", (snapshot) => {
                     this.setState({
                         userDB: snapshot.val()
                     });
+
+                    this.setState({langganan: []});
+                    for (let index in this.state.userDB.langganan) {
+                        firebase.database().ref('pengemudi/' + index).once("value").then((snapshot) => {
+                            let array = this.state.langganan;
+                            array.push(snapshot.val());
+                            this.setState({
+                                langganan: array
+                            });
+                        });
+                    }
                 });
             }
         });
@@ -63,7 +75,7 @@ export default class Main extends Component {
                 content = <Pesan />;
                 break;
             case 'langganan':
-                content = <Langganan parent={this} user={this.state.userDB} />;
+                content = <Langganan parent={this} user={this.state.userDB} langganan={this.state.langganan} />;
                 break;
             case 'profil':
                 content = <Profil parent={this} user={this.state.userDB} />;

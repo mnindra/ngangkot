@@ -28,7 +28,7 @@ export default class UbahPassword extends ValidationComponent {
     constructor (props) {
         super(props);
         this.state = {
-            password: '',
+            'password lama': '',
             'password baru': '',
             'konfirmasi password': '',
             errors: {}
@@ -36,8 +36,8 @@ export default class UbahPassword extends ValidationComponent {
     }
 
     periksaPassword() {
-        firebase.database().ref("penumpang/" + this.props.navigation.state.params.user.id_penumpang).once("value").then((snapshot) => {
-            if (snapshot.val().password == this.state.password) {
+        return firebase.database().ref("penumpang/" + this.props.navigation.state.params.user.id_penumpang).once("value").then((snapshot) => {
+            if (snapshot.val().password == this.state['password lama']) {
                 return true;
             } else {
                 return false;
@@ -54,11 +54,11 @@ export default class UbahPassword extends ValidationComponent {
 
         if(!this.periksaPassword()) {
             this.setState({
-                password: '',
+                'password lama': '',
                 'password baru': '',
                 'konfirmasi password': '',
                 errors: {
-                    'password': 'password salah'
+                    'password lama': 'password lama salah'
                 }
             });
             return 0;
@@ -66,7 +66,7 @@ export default class UbahPassword extends ValidationComponent {
 
         if(this.state['password baru'] != this.state['konfirmasi password']) {
             this.setState({
-                password: '',
+                'password lama': '',
                 'password baru': '',
                 'konfirmasi password': '',
                 errors: {
@@ -78,7 +78,7 @@ export default class UbahPassword extends ValidationComponent {
         }
 
         if (this.isFormValid()) {
-            firebase.database().ref('penumpang/' + this.props.navigation.state.params.user.id_penumpang).set({
+            firebase.database().ref('penumpang/' + this.props.navigation.state.params.user.id_penumpang).update({
                 password: this.state['password baru'],
             }).then(() => {
                 return firebase.auth().currentUser.updatePassword(this.state['password baru']);
@@ -98,7 +98,7 @@ export default class UbahPassword extends ValidationComponent {
 
     validasiForm() {
         this.validate({
-            'password': {required: true, minlength: 6},
+            'password lama': {required: true, minlength: 6},
             'password baru': {required: true, minlength: 6},
             'konfirmasi password': {required: true, minlength: 6},
         });
@@ -134,15 +134,15 @@ export default class UbahPassword extends ValidationComponent {
                   <Content padder>
 
                       <Form style={styles.form}>
-                          <Item floatingLabel error={this.isFieldInError('password')}>
+                          <Item floatingLabel error={this.isFieldInError('password lama')}>
                               <Icon name="lock" style={{color:'#4c4c4c'}}/>
                               <Input
-                                placeholder="Password"
-                                value={this.state.password}
-                                onChangeText={(text) => this.setState({password: text})}
+                                placeholder="Password Lama"
+                                value={this.state['password lama']}
+                                onChangeText={(text) => this.setState({'password lama': text})}
                                 secureTextEntry={true}/>
                           </Item>
-                          <ErrorLabel error={this.state.errors.password} />
+                          <ErrorLabel error={this.state.errors['password lama']} />
 
                           <Item floatingLabel error={this.isFieldInError('password baru')}>
                               <Icon name="lock" style={{color:'#4c4c4c'}}/>
