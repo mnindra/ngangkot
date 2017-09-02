@@ -18,7 +18,7 @@ import { Alert } from 'react-native';
 import getTheme from '../../native-base-theme/components';
 import material from '../../native-base-theme/variables/material';
 import Peta from './Peta';
-import Pesan from './Pesan';
+import Percakapan from './Percakapan';
 import Langganan from './Langganan';
 import Profil from './Profil';
 import firebase from '../config/firebase';
@@ -31,7 +31,8 @@ export default class Main extends Component {
             activeTab: this.props.navigation.state.params ? this.props.navigation.state.params.activeTab : "peta",
             userDB: '',
             userImg: 'http://placehold.it/300x300',
-            langganan: []
+            langganan: [],
+            percakapan: {}
         };
     }
 
@@ -44,6 +45,7 @@ export default class Main extends Component {
     componentDidMount() {
         firebase.auth().onAuthStateChanged((user) => {
             if(user) {
+                // ambil data langganan
                 firebase.database().ref("penumpang/" + user.uid).on("value", (snapshot) => {
                     this.setState({
                         userDB: snapshot.val()
@@ -60,19 +62,29 @@ export default class Main extends Component {
                         });
                     }
                 });
+
+                // ambil data percakapan
+                firebase.database().ref("percakapan").on("value", (snapshot) => {
+                    let percakapan = {};
+                    for (let index in snapshot.val()) {
+                       if(index.indexOf(firebase.auth().currentUser.uid) > -1) {
+                           percakapan[index] = snapshot.val()[index];
+                       }
+                    }
+                    this.setState({ percakapan });
+                });
             }
         });
     }
 
     render() {
-
         let content = '';
         switch (this.state.activeTab) {
             case 'peta':
                 content = <Peta />;
                 break;
-            case 'pesan':
-                content = <Pesan />;
+            case 'percakapan':
+                content = <Percakapan parent={this} percakapan={this.state.percakapan} user={this.state.userDB} />;
                 break;
             case 'langganan':
                 content = <Langganan parent={this} user={this.state.userDB} langganan={this.state.langganan} />;
@@ -113,8 +125,8 @@ export default class Main extends Component {
                           </Button>
 
                           <Button
-                            active={this.state.activeTab == 'pesan'}
-                            onPress={() => this.setState({activeTab: 'pesan'})}>
+                            active={this.state.activeTab == 'percakapan'}
+                            onPress={() => this.setState({activeTab: 'percakapan'})}>
                               <Icon name="message"/>
                           </Button>
 
