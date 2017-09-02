@@ -13,7 +13,7 @@ import {
     Col,
     Header,
     Title,
-    StyleProvider,
+    StyleProvider
 } from 'native-base';
 import getTheme from '../../native-base-theme/components';
 import material from '../../native-base-theme/variables/material';
@@ -96,7 +96,7 @@ export default class Profil extends Component {
                   </Header>
                   <Content>
                       <Content style={styles.top}>
-                          <Image style={styles.image} source={{uri: navigationProps.pengemudi.foto || placehold}} />
+                          <Image  style={styles.image} source={{uri: navigationProps.pengemudi.foto || placehold}} />
                           <Text style={styles.textTop}>{navigationProps.pengemudi.nama}</Text>
                           <Text style={styles.textTop}>{navigationProps.pengemudi.email}</Text>
                           <Content style={{width: '40%', marginRight: 'auto', marginLeft: 'auto', marginTop:10}}>
@@ -184,7 +184,8 @@ const styles = StyleSheet.create({
         marginLeft: 'auto',
         marginBottom: 10,
         width: 180,
-        height: 180
+        height: 180,
+        borderRadius: 100
     },
     textTop: {
         textAlign: 'center',

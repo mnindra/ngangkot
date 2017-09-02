@@ -100,7 +100,8 @@ const styles = StyleSheet.create({
         marginLeft: 'auto',
         marginBottom: 10,
         width: 200,
-        height: 200
+        height: 200,
+        borderRadius: 120
     },
     textTop: {
         textAlign: 'center',

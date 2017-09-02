@@ -37,23 +37,7 @@ export default class LihatTestimoni extends ValidationComponent {
             'testimoni ': '',
             rating: 0,
             errors: {}
-        };
-
-        firebase.database().ref("pengemudi/" + this.navigationProps.pengemudi.id_pengemudi + "/testimoni").on("value", (snapshot) => {
-            let testimoni = [];
-            for (let index in snapshot.val()) {
-                let objTestimoni = snapshot.val()[index];
-                firebase.database().ref("penumpang/" + snapshot.val()[index].id_penumpang).once("value").then((snapshot) => {
-                    objTestimoni.penumpang = snapshot.val();
-                    return objTestimoni;
-                }).then((objTestimoni) => {
-                    testimoni.push(objTestimoni);
-                    return testimoni;
-                }).then((testimoni) => {
-                    this.setState({testimoni});
-                });
-            }
-        });
+        }
     }
 
     beriTestimoni() {
@@ -101,16 +85,30 @@ export default class LihatTestimoni extends ValidationComponent {
     }
 
     componentDidMount() {
-
+        firebase.database().ref("pengemudi/" + this.navigationProps.pengemudi.id_pengemudi + "/testimoni").on("value", (snapshot) => {
+            let testimoni = [];
+            for (let index in snapshot.val()) {
+                let objTestimoni = snapshot.val()[index];
+                firebase.database().ref("penumpang/" + snapshot.val()[index].id_penumpang).once("value").then((snapshot) => {
+                    objTestimoni.penumpang = snapshot.val();
+                    return objTestimoni;
+                }).then((objTestimoni) => {
+                    testimoni.push(objTestimoni);
+                    return testimoni;
+                }).then((testimoni) => {
+                    this.setState({testimoni});
+                });
+            }
+        });
     }
 
     renderRow(rowData) {
         return (
           <ListItem>
-              <Left style={{flex:1}} contentContainerStyle={{justifyContent: 'flex-start', flexDirection: 'column'}}>
-                  <Thumbnail source={{ uri: rowData.penumpang.foto || this.placehold }} />
-              </Left>
-              <Body style={{flex:3}}>
+              <Content style={{flex:1}} contentContainerStyle={{justifyContent: 'flex-start'}}>
+                  <Thumbnail square size={80} source={{ uri: rowData.penumpang.foto || this.placehold }} />
+              </Content>
+              <Body style={{flex:2}}>
               <Text>{rowData.penumpang.nama}</Text>
               <Text note>{rowData.tanggal}</Text>
               <Content style={{width: '30%'}} padder>

@@ -39,7 +39,8 @@ export default class UbahFoto extends Component {
             cropperActiveWidgetColor: '#484fff',
             cropperToolbarColor: '#5b82ff',
             cropping: true,
-            includeBase64: true
+            includeBase64: true,
+            cropperCircleOverlay: true
         }).then(image => {
             this.setState({
                 image: image.data,
@@ -53,7 +54,8 @@ export default class UbahFoto extends Component {
             width: 300,
             height: 400,
             cropping: true,
-            includeBase64: true
+            includeBase64: true,
+            cropperCircleOverlay: true
         }).then(image => {
             this.setState({
                 image: image.data,
@@ -154,10 +156,12 @@ const styles = StyleSheet.create({
         height: 35
     },
     image: {
-        width: '100%',
+        width: 300,
         height: 300,
+        borderRadius: 250,
         marginRight: 'auto',
         marginLeft: 'auto',
-        marginBottom: 10
+        marginBottom: 30,
+        marginTop: 30
     }
 });
