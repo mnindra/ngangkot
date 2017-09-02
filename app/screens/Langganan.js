@@ -43,7 +43,7 @@ export default class Langganan extends Component {
             onPress={() => this.props.parent.props.navigation.navigate('ProfilPengemudi', {pengemudi:rowData, penumpang: this.props.user})}
             style={{paddingBottom:10}}>
               <Left>
-                  <Thumbnail square source={{ uri: rowData.foto || 'http://placehold.it/300x300' }} />
+                  <Thumbnail source={{ uri: rowData.foto || 'http://placehold.it/300x300' }} />
               </Left>
               <Body>
               <Text>{rowData.nama}</Text>

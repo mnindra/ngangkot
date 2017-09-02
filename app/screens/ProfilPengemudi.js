@@ -19,6 +19,7 @@ import getTheme from '../../native-base-theme/components';
 import material from '../../native-base-theme/variables/material';
 import {StyleSheet, Image, TouchableOpacity} from 'react-native';
 import firebase from '../config/firebase';
+import StarRating from 'react-native-star-rating';
 
 export default class Profil extends Component {
 
@@ -71,6 +72,15 @@ export default class Profil extends Component {
             langgananBtn = <Button danger block  onPress={() => this.batalLangganan()}><Text>Batal Langganan</Text></Button>
         }
 
+        // hitung rating
+        let rating = 0;
+        let ratingCount = 0;
+        for(let index in navigationProps.pengemudi.testimoni) {
+            rating += navigationProps.pengemudi.testimoni[index].rating;
+            ratingCount++;
+        }
+        rating = rating / ratingCount;
+
         return (
           <StyleProvider style={getTheme(material)}>
               <Container>
@@ -89,31 +99,17 @@ export default class Profil extends Component {
                           <Image style={styles.image} source={{uri: navigationProps.pengemudi.foto || placehold}} />
                           <Text style={styles.textTop}>{navigationProps.pengemudi.nama}</Text>
                           <Text style={styles.textTop}>{navigationProps.pengemudi.email}</Text>
+                          <Content style={{width: '40%', marginRight: 'auto', marginLeft: 'auto', marginTop:10}}>
+                              <StarRating
+                                disabled={true}
+                                maxStars={5}
+                                rating={rating}
+                                starColor={'#FFEB3B'}
+                                emptyStarColor={'#fff'}
+                                starSize={20}
+                              />
+                          </Content>
 
-                          {/*<Grid>*/}
-                              {/*<Col style={{paddingRight: 5, textAlign: 'right'}}>*/}
-                                  {/*<Button*/}
-                                    {/*active*/}
-                                    {/*IconLeft*/}
-                                    {/*light*/}
-                                    {/*transparent*/}
-                                    {/*onPress={() => this.navigation.navigate('UbahProfil', {user:this.props.user})}>*/}
-                                      {/*<Icon name="thumb-up" />*/}
-                                      {/*<Text>25</Text>*/}
-                                  {/*</Button>*/}
-                              {/*</Col>*/}
-
-                              {/*<Col style={{paddingLeft: 5}}>*/}
-                                  {/*<Button*/}
-                                    {/*IconLeft*/}
-                                    {/*light*/}
-                                    {/*transparent*/}
-                                    {/*onPress={() => this.props.navigation.navigate('UbahPassword', {user:this.props.user})}>*/}
-                                      {/*<Icon name="thumb-down" />*/}
-                                      {/*<Text>5</Text>*/}
-                                  {/*</Button>*/}
-                              {/*</Col>*/}
-                          {/*</Grid>*/}
                       </Content>
                       <Content style={styles.center}>
                           <List>
@@ -152,7 +148,8 @@ export default class Profil extends Component {
                                   <Button
                                     success
                                     block
-                                    bordered>
+                                    bordered
+                                    onPress={() => this.props.navigation.navigate('LihatTestimoni', {pengemudi: navigationProps.pengemudi})}>
                                       <Text>Lihat Testimoni</Text>
                                   </Button>
                               </Col>
@@ -186,8 +183,8 @@ const styles = StyleSheet.create({
         marginRight: 'auto',
         marginLeft: 'auto',
         marginBottom: 10,
-        width: 200,
-        height: 200
+        width: 180,
+        height: 180
     },
     textTop: {
         textAlign: 'center',
