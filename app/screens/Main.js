@@ -30,7 +30,6 @@ export default class Main extends Component {
         this.state = {
             activeTab: this.props.navigation.state.params ? this.props.navigation.state.params.activeTab : "peta",
             userDB: '',
-            userImg: 'http://placehold.it/300x300',
             langganan: [],
             percakapan: {}
         };
@@ -43,37 +42,33 @@ export default class Main extends Component {
     }
 
     componentDidMount() {
-        firebase.auth().onAuthStateChanged((user) => {
-            if(user) {
-                // ambil data langganan
-                firebase.database().ref("penumpang/" + user.uid).on("value", (snapshot) => {
+        // ambil data penumpang saat ini
+        let uid = firebase.auth().currentUser.uid;
+        firebase.database().ref("penumpang/" + uid).on("value", (snapshot) => {
+            this.setState({ userDB: snapshot.val() });
+
+            // ambil data langganan penumpang
+            this.setState({langganan: []});
+            for (let index in snapshot.val().langganan) {
+                firebase.database().ref('pengemudi/' + index).once("value").then((snapshot) => {
+                    let array = this.state.langganan;
+                    array.push(snapshot.val());
                     this.setState({
-                        userDB: snapshot.val()
+                        langganan: array
                     });
-
-                    this.setState({langganan: []});
-                    for (let index in snapshot.val().langganan) {
-                        firebase.database().ref('pengemudi/' + index).once("value").then((snapshot) => {
-                            let array = this.state.langganan;
-                            array.push(snapshot.val());
-                            this.setState({
-                                langganan: array
-                            });
-                        });
-                    }
-                });
-
-                // ambil data percakapan
-                firebase.database().ref("percakapan").on("value", (snapshot) => {
-                    let percakapan = {};
-                    for (let index in snapshot.val()) {
-                       if(index.indexOf(firebase.auth().currentUser.uid) > -1) {
-                           percakapan[index] = snapshot.val()[index];
-                       }
-                    }
-                    this.setState({ percakapan });
                 });
             }
+        });
+
+        // ambil data percakapan
+        firebase.database().ref("percakapan").on("value", (snapshot) => {
+            let percakapan = {};
+            for (let index in snapshot.val()) {
+                if(index.indexOf(firebase.auth().currentUser.uid) > -1) {
+                    percakapan[index] = snapshot.val()[index];
+                }
+            }
+            this.setState({ percakapan });
         });
     }
 
@@ -97,7 +92,6 @@ export default class Main extends Component {
         return (
           <StyleProvider style={getTheme(material)}>
               <Container>
-
                   <Header noShadow>
                       <Left>
                           <Button transparent>

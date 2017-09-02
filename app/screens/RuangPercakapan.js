@@ -56,7 +56,6 @@ export default class LihatTestimoni extends ValidationComponent {
                 isi: this.state.pesan,
                 waktu: `${tanggal}/${bulan}/${tahun} ${jam}:${menit}`
             });
-
             this.reset();
         }
     }
@@ -150,5 +149,4 @@ export default class LihatTestimoni extends ValidationComponent {
           </StyleProvider>
         )
     }
-
 }

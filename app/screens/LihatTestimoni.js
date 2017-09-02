@@ -55,7 +55,6 @@ export default class LihatTestimoni extends ValidationComponent {
                 rating: this.state.rating,
                 tanggal: `${tanggal}/${bulan}/${tahun}`
             });
-
             this.reset();
         }
     }

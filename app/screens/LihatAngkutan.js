@@ -35,7 +35,10 @@ export default class LihatAngkutan extends Component {
         this.placehold = 'http://placehold.it/300x300';
         this.navigationProps = this.props.navigation.state.params;
         this.mapRef = null;
+    }
 
+    componentDidMount() {
+        // ambil overview_path untuk membuat polyline
         let id_rute = this.navigationProps.pengemudi.angkutan.id_rute;
         firebase.database().ref("rute/" + id_rute + "/rute/routes/0/overview_path").once("value").then((snapshot) => {
             let overview_path = [];
@@ -53,6 +56,7 @@ export default class LihatAngkutan extends Component {
             });
         });
 
+        // ambil informasi tentang biaya, keterangan dll
         firebase.database().ref("rute/" + id_rute).once("value").then((snapshot) => {
             this.setState({
                 biaya: snapshot.val().biaya,
@@ -180,15 +184,5 @@ const styles = StyleSheet.create({
     },
     textCenter: {
         color: '#3d3d3d'
-    },
-    container: {
-        ...StyleSheet.absoluteFillObject,
-        height: 400,
-        width: 400,
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-    },
-    map: {
-        ...StyleSheet.absoluteFillObject,
     },
 });
