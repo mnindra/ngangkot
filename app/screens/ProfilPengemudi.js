@@ -67,9 +67,20 @@ export default class Profil extends Component {
         let navigationProps = this.props.navigation.state.params;
         let langgananBtn = '';
         if(this.state.langganan == 0) {
-            langgananBtn = <Button success block onPress={() => this.langganan()}><Text>Langganan</Text></Button>
+            langgananBtn = <Button full success block onPress={() => this.langganan()}><Text>Langganan</Text></Button>
         } else {
-            langgananBtn = <Button danger block  onPress={() => this.batalLangganan()}><Text>Batal Langganan</Text></Button>
+            langgananBtn = <Button full danger block  onPress={() => this.batalLangganan()}><Text>Batal Langganan</Text></Button>
+        }
+
+        let pesanBtn;
+        if(this.state.langganan == 1 && navigationProps.penumpang.langganan[navigationProps.pengemudi.id_pengemudi].status == 1) {
+            pesanBtn = <Button
+              transparent
+              light
+              style={{marginLeft: 'auto', marginRight: 'auto'}}
+              onPress={() => this.props.navigation.navigate('RuangPercakapan', {penumpang: navigationProps.penumpang, pengemudi: navigationProps.pengemudi})}>
+                <Icon name="message" />
+            </Button>
         }
 
         // hitung rating
@@ -109,8 +120,9 @@ export default class Profil extends Component {
                                 starSize={20}
                               />
                           </Content>
-
+                          {pesanBtn}
                       </Content>
+                      {langgananBtn}
                       <Content style={styles.center}>
                           <List>
                               <ListItem icon first>
@@ -156,7 +168,6 @@ export default class Profil extends Component {
                           </Grid>
                       </Content>
                   </Content>
-                  {langgananBtn}
               </Container>
           </StyleProvider>
         )

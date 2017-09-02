@@ -28,12 +28,9 @@ export default class Langganan extends Component {
     }
 
     renderRow(rowData) {
-        let konfirmasi = '';
-        let batal = '';
-
+        let konfirmasi;
         if (this.props.user.langganan[rowData.id_pengemudi].status == 0) {
             konfirmasi = 'Belum Dikonfirmasi';
-            batal = <Button small danger onPress={() => this.batal(rowData.id_pengemudi)}><Text>Batal</Text></Button>
         }
 
         return (
@@ -50,7 +47,7 @@ export default class Langganan extends Component {
               <Text note style={{color: '#b5423c'}}>{konfirmasi}</Text>
               </Body>
               <Right>
-                  {batal}
+                  <Button small danger onPress={() => this.batal(rowData.id_pengemudi)}><Text>Batal</Text></Button>
               </Right>
           </ListItem>
         )

@@ -105,7 +105,7 @@ export default class LihatTestimoni extends ValidationComponent {
     renderRow(rowData) {
         return (
           <ListItem>
-              <Thumbnail square size={80} source={{ uri: rowData.penumpang.foto || this.placehold }} />
+              <Thumbnail size={80} source={{ uri: rowData.penumpang.foto || this.placehold }} />
               <Body>
               <Text>{rowData.penumpang.nama}</Text>
               <Text note>{rowData.tanggal}</Text>
