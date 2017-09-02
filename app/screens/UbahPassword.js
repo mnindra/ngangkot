@@ -164,16 +164,13 @@ export default class UbahPassword extends ValidationComponent {
                           </Item>
                           <ErrorLabel error={this.state.errors['konfirmasi password']} />
                       </Form>
-
-                      <Button
-                        primary
-                        block
-                        onPress={() => this.ubah()}
-                        style={{marginBottom: 10}}>
-                          <Text>Ubah</Text>
-                      </Button>
-
                   </Content>
+                  <Button
+                    success
+                    block
+                    onPress={() => this.ubah()}>
+                      <Text>Simpan</Text>
+                  </Button>
               </Container>
           </StyleProvider>
         );

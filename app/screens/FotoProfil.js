@@ -42,6 +42,8 @@ export default class FotoProfil extends Component {
                 image: image.data,
                 imagePath: image.path
             });
+        }).catch((error) => {
+
         });
     }
 
@@ -57,6 +59,8 @@ export default class FotoProfil extends Component {
                 image: image.data,
                 imagePath: image.path
             });
+        }).catch((error) => {
+
         });
     }
 

@@ -46,6 +46,8 @@ export default class UbahFoto extends Component {
                 image: image.data,
                 imagePath: image.path
             });
+        }).catch((error) => {
+
         });
     }
 
@@ -61,6 +63,8 @@ export default class UbahFoto extends Component {
                 image: image.data,
                 imagePath: image.path
             });
+        }).catch((error) => {
+
         });
     }
 
@@ -135,7 +139,7 @@ export default class UbahFoto extends Component {
                       </Grid>
                   </Content>
                   <Button
-                    info
+                    success
                     block
                     style={{marginTop:10}}
                     onPress={() => this.UploadFoto()}>
