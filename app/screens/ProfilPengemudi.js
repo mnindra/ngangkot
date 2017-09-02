@@ -139,7 +139,7 @@ export default class Profil extends Component {
                                     primary
                                     block
                                     bordered
-                                    onPress={() => this.props.navigation.navigate('LihatAngkutan', {angkutan: navigationProps.pengemudi.angkutan})}>
+                                    onPress={() => this.props.navigation.navigate('LihatAngkutan', {angkutan: navigationProps.pengemudi.angkutan, pengemudi: navigationProps.pengemudi})}>
                                       <Text>lihat angkutan</Text>
                                   </Button>
                               </Col>
