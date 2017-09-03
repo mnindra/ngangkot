@@ -11,7 +11,8 @@ import {
     Button
 } from 'native-base';
 import {Alert} from 'react-native';
-import firebase from '../config/firebase';
+import firebase from '../../config/firebase';
+import styles from "./styles";
 
 export default class Langganan extends Component {
 
@@ -38,7 +39,7 @@ export default class Langganan extends Component {
             avatar
             button
             onPress={() => this.props.parent.props.navigation.navigate('ProfilPengemudi', {pengemudi:rowData, penumpang: this.props.user})}
-            style={{paddingBottom:10}}>
+            style={styles.listItem}>
               <Left>
                   <Thumbnail source={{ uri: rowData.foto || 'http://placehold.it/300x300' }} />
               </Left>
@@ -55,7 +56,7 @@ export default class Langganan extends Component {
 
     render () {
         return (
-          <Content style={{ backgroundColor: '#fff' }} padder>
+          <Content style={styles.content} padder>
               <List dataArray={this.props.langganan} renderRow={(rowData) => this.renderRow(rowData)}></List>
           </Content>
         )

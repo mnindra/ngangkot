@@ -1,15 +1,15 @@
 import { StackNavigator } from 'react-navigation';
 import Login from './app/screens/Login';
-import Daftar from './app/screens/Daftar';
-import FotoProfil from './app/screens/FotoProfil';
-import Main from './app/screens/Main';
-import UbahFoto from './app/screens/UbahFoto';
-import UbahProfil from './app/screens/UbahProfil';
-import UbahPassword from './app/screens/UbahPassword';
-import ProfilPengemudi from './app/screens/ProfilPengemudi';
-import LihatAngkutan from './app/screens/LihatAngkutan';
-import LihatTestimoni from './app/screens/LihatTestimoni';
-import RuangPercakapan from './app/screens/RuangPercakapan';
+import Daftar from './app/screens/Daftar/index';
+import FotoProfil from './app/screens/FotoProfil/index';
+import Main from './app/screens/Main/index';
+import UbahFoto from './app/screens/UbahFoto/index';
+import UbahProfil from './app/screens/UbahProfil/index';
+import UbahPassword from './app/screens/UbahPassword/index';
+import ProfilPengemudi from './app/screens/ProfilPengemudi/index';
+import LihatAngkutan from './app/screens/LihatAngkutan/index';
+import LihatTestimoni from './app/screens/LihatTestimoni/index';
+import RuangPercakapan from './app/screens/RuangPercakapan/index';
 
 console.ignoredYellowBox = [
     'Setting a timer'
