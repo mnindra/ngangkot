@@ -42,6 +42,7 @@ export default class RuteAngkot extends Component {
         longitude: this.navigationProps.position.longitude
       },
       loading: false,
+      search: true,
       rute: [],
       ruteTerpilih: "",
       overview_path: [],
@@ -68,7 +69,7 @@ export default class RuteAngkot extends Component {
           let latRute = overview_path[index].lat;
           let lonRute = overview_path[index].lng;
           let jarak = this.getDistanceFromLatLonInKm(latTujuan, lonTujuan, latRute, lonRute);
-          if(jarak < 1) {
+          if(jarak < 1.5) {
             dekat = true;
             break;
           }
@@ -102,6 +103,13 @@ export default class RuteAngkot extends Component {
         }
       });
 
+      // kembali apabila tidak ada rute yang ditemukan
+      if(!ruteDekat2.length > 0) {
+        Alert.alert("Rute Angkot", "Tidak ditemukan rute angkot yang sesuai, silahkan ubah lokasi awal dan tujuan anda");
+        this.props.navigation.navigate("Main");
+        return 0;
+      }
+
       // simpan rute yang dekat ke state
       let overview_path = [];
       for(let index in ruteDekat2[0].rute.routes[0].overview_path) {
@@ -111,16 +119,18 @@ export default class RuteAngkot extends Component {
       }
 
       this.setState({
+        search: false,
         rute: ruteDekat2,
         ruteTerpilih: ruteDekat2[0].id_rute,
         overview_path: overview_path
       });
-      this.mapRef.fitToElements(true);
+      this.mapRef.fitToElements(false);
     });
   }
 
   componentDidMount() {
     // mencari lokasi geolocation
+    this.mapRef.fitToElements(false);
     this.watchId = navigator.geolocation.watchPosition((position) => {
         this.setState({
           loading: false,
@@ -130,7 +140,6 @@ export default class RuteAngkot extends Component {
           },
           error: null
         });
-        this.mapRef.fitToElements(true);
       }, (error) => this.setState({ error: error.message }),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
     );
@@ -170,7 +179,7 @@ export default class RuteAngkot extends Component {
       ruteTerpilih: id_rute,
       overview_path: overview_path
     });
-    // this.mapRef.fitToElements(true);
+    this.mapRef.fitToElements(true);
   }
 
   render() {
@@ -231,6 +240,7 @@ export default class RuteAngkot extends Component {
                 strokeWidth={3}/>
 
             </MapView>
+            <Text>{ this.state.search ? 'mencari rute angkot yang cocok...' : '' }</Text>
             <Text>{ this.state.loading ? 'mencari lokasi saat ini...' : '' }</Text>
           </View>
 
@@ -241,7 +251,7 @@ export default class RuteAngkot extends Component {
               onValueChange={(value, index) => this.setRute(value, index)}
               mode="dropdown">
               {this.state.rute.map(rute => (
-                <Item label={rute.id_rute} value={rute.id_rute} />
+                <Item key={Math.random().toString(36).substring(7)} label={rute.id_rute} value={rute.id_rute} />
               ))}
             </Picker>
           </Content>

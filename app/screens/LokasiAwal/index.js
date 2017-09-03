@@ -41,14 +41,20 @@ export default class LokasiAwal extends Component {
   componentDidMount() {
     this.watchId = navigator.geolocation.watchPosition((position) => {
         this.setState({
-          loading: false,
           position: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           },
           error: null
         });
-        this.mapRef.fitToElements(true);
+
+        if(this.state.loading == true) {
+          this.mapRef.fitToElements(true);
+          this.setState({
+            loading: false
+          });
+        }
+
       }, (error) => this.setState({ error: error.message }),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
     );
@@ -63,6 +69,17 @@ export default class LokasiAwal extends Component {
     let id = Math.random().toString(36).substring(7);
     markers.push({key: id, latlng: coordinate});
     this.setState({markers});
+  }
+
+  selanjutnya () {
+    if(this.state.markers.length > 0) {
+      this.props.navigation.navigate('LokasiTujuan', {
+        lokasiAwal: this.state.markers[0].latlng,
+        position: this.state.position
+      });
+    } else {
+      Alert.alert("Lokasi Awal", "Silahkan pilih lokasi awal");
+    }
   }
 
   render() {
@@ -105,6 +122,7 @@ export default class LokasiAwal extends Component {
                 <MapView.Marker
                   draggable
                   pinColor={"#3cb338"}
+                  key={marker.key}
                   coordinate={marker.latlng}
                   title={'Lokasi Awal'}
                   description={'lokasi dimana anda akan naik angkot'}
@@ -120,7 +138,7 @@ export default class LokasiAwal extends Component {
           <Button
             success
             block
-            onPress={() => this.props.navigation.navigate('LokasiTujuan', {lokasiAwal: this.state.markers[0].latlng, position: this.state.position})}>
+            onPress={() => this.selanjutnya()}>
             <Text>Selanjutnya</Text>
           </Button>
         </Container>
