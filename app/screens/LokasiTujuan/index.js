@@ -22,20 +22,22 @@ import firebase from '../../config/firebase';
 import styles from './styles';
 import MapView from 'react-native-maps';
 
-export default class LokasiAwal extends Component {
+export default class LokasiTujuan extends Component {
 
   constructor(props) {
     super(props);
+    this.mapRef = null;
+    this.navigationProps = this.props.navigation.state.params;
+
     this.state = {
       position: {
-        latitude: 0,
-        longitude: 0
+        latitude: this.navigationProps.position.latitude,
+        longitude: this.navigationProps.position.longitude
       },
-      loading: true,
+      loading: false,
       markers: [],
       error: null
     };
-    this.mapRef = null;
   }
 
   componentDidMount() {
@@ -75,7 +77,7 @@ export default class LokasiAwal extends Component {
               </Button>
             </Left>
             <Body>
-            <Title>Lokasi Awal</Title>
+            <Title>Lokasi Tujuan</Title>
             </Body>
           </Header>
 
@@ -89,6 +91,7 @@ export default class LokasiAwal extends Component {
                 longitudeDelta: 0.13812806457281113,
               }}
               style={styles.map}
+              onMapReady={() => this.mapRef.fitToElements(true)}
               onPress={(event) => this.addMarker(event.nativeEvent.coordinate)}>
 
               {/* marker posisi */}
@@ -99,27 +102,34 @@ export default class LokasiAwal extends Component {
                 </View>
               </MapView.Marker>
 
-              {/* marker titik awal */}
+              {/* marker titik tujuan */}
               {this.state.markers.map(marker => (
                 <MapView.Marker
                   draggable
-                  pinColor={"#3cb338"}
+                  pinColor={"#447dd4"}
                   coordinate={marker.latlng}
-                  title={'Lokasi Awal'}
-                  description={'lokasi dimana anda akan naik angkot'}
-                  onDragEnd={(event) => this.addMarker(event.nativeEvent.coordinate)}
+                  title={'Lokasi Tujuan'}
+                  description={'lokasi yang ingin anda tujuan'}
                 />
               ))}
 
+              {/* marker titik awal */}
+              <MapView.Marker
+                pinColor={"#71B300"}
+                coordinate={this.navigationProps.lokasiAwal}
+                title={'Lokasi Awal'}
+                description={'lokasi dimana anda akan naik angkot'}
+              />
+
             </MapView>
             <Text>{ this.state.loading ? 'mencari lokasi saat ini...' : '' }</Text>
-            <Text style={styles.textHint}>Sentuh peta untuk menentukan lokasi awal</Text>
+            <Text style={styles.textHint}>Sentuh peta untuk menentukan lokasi tujuan</Text>
           </View>
 
           <Button
             success
             block
-            onPress={() => this.props.navigation.navigate('LokasiTujuan', {lokasiAwal: this.state.markers[0].latlng, position: this.state.position})}>
+            onPress={() => this.UploadFoto()}>
             <Text>Selanjutnya</Text>
           </Button>
         </Container>
