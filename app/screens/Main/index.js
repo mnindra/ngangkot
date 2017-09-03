@@ -17,7 +17,7 @@ import {
 import { Alert } from 'react-native';
 import getTheme from '../../../native-base-theme/components/index';
 import material from '../../../native-base-theme/variables/material';
-import Peta from '../Peta/index';
+import Ngangkot from '../Ngangkot/index';
 import Percakapan from '../Percakapan/index';
 import Langganan from '../Langganan/index';
 import Profil from '../Profil/index';
@@ -28,7 +28,7 @@ export default class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeTab: this.props.navigation.state.params ? this.props.navigation.state.params.activeTab : "peta",
+      activeTab: this.props.navigation.state.params ? this.props.navigation.state.params.activeTab : "ngangkot",
       userDB: '',
       langganan: [],
       percakapan: {}
@@ -44,8 +44,8 @@ export default class Main extends Component {
   getContent() {
     let content = '';
     switch (this.state.activeTab) {
-      case 'peta':
-        content = <Peta />;
+      case 'ngangkot':
+        content = <Ngangkot parent={this} />;
         break;
       case 'percakapan':
         content = <Percakapan parent={this} percakapan={this.state.percakapan} user={this.state.userDB} />;
@@ -116,9 +116,9 @@ export default class Main extends Component {
           <Footer>
             <FooterTab>
               <Button
-                active={this.state.activeTab == 'peta'}
-                onPress={() => this.setState({activeTab: 'peta'})}>
-                <Icon name="map"/>
+                active={this.state.activeTab == 'ngangkot'}
+                onPress={() => this.setState({activeTab: 'ngangkot'})}>
+                <Icon name="directions-car"/>
               </Button>
 
               <Button
@@ -130,7 +130,7 @@ export default class Main extends Component {
               <Button
                 active={this.state.activeTab == 'langganan'}
                 onPress={() => this.setState({activeTab: 'langganan'})}>
-                <Icon name="directions-car"/>
+                <Icon name="contact-mail"/>
               </Button>
 
               <Button
