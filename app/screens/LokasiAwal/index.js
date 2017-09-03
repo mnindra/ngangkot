@@ -60,7 +60,8 @@ export default class LokasiAwal extends Component {
 
   addMarker(coordinate) {
     let markers = [];
-    markers.push({latlng: coordinate});
+    let id = Math.random().toString(36).substring(7);
+    markers.push({key: id, latlng: coordinate});
     this.setState({markers});
   }
 

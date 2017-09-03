@@ -13,7 +13,14 @@ import {
   Header,
   Left,
   Body,
-  Title
+  Title,
+  Form,
+  Picker,
+  Item,
+  Label,
+  List,
+  ListItem,
+  Right
 } from 'native-base';
 import {View, Alert} from  'react-native';
 import getTheme from '../../../native-base-theme/components/index';
@@ -36,26 +43,10 @@ export default class RuteAngkot extends Component {
       },
       loading: false,
       rute: [],
-      ruteDekat: [],
+      ruteTerpilih: "",
+      overview_path: [],
       error: null
     };
-  }
-
-  componentDidMount() {
-    // mencari lokasi geolocation
-    this.watchId = navigator.geolocation.watchPosition((position) => {
-        this.setState({
-          loading: false,
-          position: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          },
-          error: null
-        });
-        this.mapRef.fitToElements(true);
-      }, (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
-    );
 
     //  mengambil semua data rute
     firebase.database().ref("rute").once("value").then((snapshot) => {
@@ -112,14 +103,37 @@ export default class RuteAngkot extends Component {
       });
 
       // simpan rute yang dekat ke state
-      this.setState({
-        ruteDekat: ruteDekat2
-      });
+      let overview_path = [];
+      for(let index in ruteDekat2[0].rute.routes[0].overview_path) {
+        let latitude = ruteDekat2[0].rute.routes[0].overview_path[index].lat;
+        let longitude = ruteDekat2[0].rute.routes[0].overview_path[index].lng;
+        overview_path.push({latitude, longitude});
+      }
 
-      this.state.ruteDekat.forEach((item) => {
-        Alert.alert(JSON.stringify(item.id_rute));
+      this.setState({
+        rute: ruteDekat2,
+        ruteTerpilih: ruteDekat2[0].id_rute,
+        overview_path: overview_path
       });
+      this.mapRef.fitToElements(true);
     });
+  }
+
+  componentDidMount() {
+    // mencari lokasi geolocation
+    this.watchId = navigator.geolocation.watchPosition((position) => {
+        this.setState({
+          loading: false,
+          position: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          },
+          error: null
+        });
+        this.mapRef.fitToElements(true);
+      }, (error) => this.setState({ error: error.message }),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
+    );
   }
 
   getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
@@ -144,17 +158,100 @@ export default class RuteAngkot extends Component {
     navigator.geolocation.clearWatch(this.watchId);
   }
 
-  addMarker(coordinate) {
-    let markers = [];
-    markers.push({latlng: coordinate});
-    this.setState({markers});
+  setRute(id_rute, indexItem) {
+    let overview_path = [];
+    for(let index in this.state.rute[indexItem].rute.routes[0].overview_path) {
+      let latitude = this.state.rute[indexItem].rute.routes[0].overview_path[index].lat;
+      let longitude = this.state.rute[indexItem].rute.routes[0].overview_path[index].lng;
+      overview_path.push({latitude, longitude});
+    }
+
+    this.setState({
+      ruteTerpilih: id_rute,
+      overview_path: overview_path
+    });
+    // this.mapRef.fitToElements(true);
   }
 
   render() {
     return (
       <StyleProvider style={getTheme(material)}>
         <Container style={styles.container}>
+          <Header>
+            <Left>
+              <Button transparent onPress={() => this.props.navigation.goBack()}>
+                <Icon name="chevron-left" />
+              </Button>
+            </Left>
+            <Body>
+            <Title>Pilih Rute Angkot</Title>
+            </Body>
+          </Header>
 
+          <View style={styles.mapContainer}>
+            <MapView
+              ref={(ref) => this.mapRef = ref }
+              initialRegion={{
+                latitude: -7.958696250180737,
+                longitude: 122.64232739806175,
+                latitudeDelta: 0.11209798401417004,
+                longitudeDelta: 0.13812806457281113,
+              }}
+              style={styles.map}
+              onMapReady={() => this.mapRef.fitToElements(true)}>
+
+              {/* marker posisi */}
+              <MapView.Marker
+                coordinate={{latitude: this.state.position.latitude, longitude: this.state.position.longitude}}>
+                <View style={styles.radius}>
+                  <View style={styles.marker} />
+                </View>
+              </MapView.Marker>
+
+              {/* marker titik tujuan */}
+              <MapView.Marker
+                pinColor={"#447dd4"}
+                coordinate={this.navigationProps.lokasiTujuan}
+                title={'Lokasi Tujuan'}
+                description={'lokasi yang ingin anda tuju'}
+              />
+
+              {/* marker titik awal */}
+              <MapView.Marker
+                pinColor={"#71B300"}
+                coordinate={this.navigationProps.lokasiAwal}
+                title={'Lokasi Awal'}
+                description={'lokasi dimana anda akan naik angkot'}
+              />
+
+              {/* jalur rute */}
+              <MapView.Polyline
+                coordinates={this.state.overview_path}
+                strokeColor={'#709eff'}
+                strokeWidth={3}/>
+
+            </MapView>
+            <Text>{ this.state.loading ? 'mencari lokasi saat ini...' : '' }</Text>
+          </View>
+
+          <Content style={styles.pickerContainer} padder>
+            <Label>Pilih Rute Angkot</Label>
+            <Picker
+              selectedValue={this.state.ruteTerpilih}
+              onValueChange={(value, index) => this.setRute(value, index)}
+              mode="dropdown">
+              {this.state.rute.map(rute => (
+                <Item label={rute.id_rute} value={rute.id_rute} />
+              ))}
+            </Picker>
+          </Content>
+
+          <Button
+            success
+            block
+            onPress={() => this.props.navigation.navigate('RuteAngkot', {lokasiAwal: this.navigationProps.lokasiAwal, lokasiTujuan: this.state.markers[0].latlng, position: this.state.position})}>
+            <Text>Ngangkot</Text>
+          </Button>
         </Container>
       </StyleProvider>
     );

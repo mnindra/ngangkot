@@ -109,7 +109,7 @@ export default class LokasiTujuan extends Component {
                   pinColor={"#447dd4"}
                   coordinate={marker.latlng}
                   title={'Lokasi Tujuan'}
-                  description={'lokasi yang ingin anda tujuan'}
+                  description={'lokasi yang ingin anda tuju'}
                 />
               ))}
 
