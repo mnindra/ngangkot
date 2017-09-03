@@ -47,10 +47,13 @@ export default class Profil extends Component {
 
   batalLangganan() {
     let uid = firebase.auth().currentUser.uid;
+    // hapus data langganan
     firebase.database().ref("penumpang/" + uid + "/langganan/" + this.navigationProps.pengemudi.id_pengemudi).remove();
     this.setState({
       langganan: 0
     });
+    // hapus percakapan dengan pengemudi
+    firebase.database().ref('percakapan/' + uid + '_' + this.navigationProps.pengemudi.id_pengemudi).remove();
   }
 
   hitungRating() {
