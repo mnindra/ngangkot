@@ -129,8 +129,8 @@ export default class LokasiTujuan extends Component {
           <Button
             success
             block
-            onPress={() => this.UploadFoto()}>
-            <Text>Selanjutnya</Text>
+            onPress={() => this.props.navigation.navigate('RuteAngkot', {lokasiAwal: this.navigationProps.lokasiAwal, lokasiTujuan: this.state.markers[0].latlng, position: this.state.position})}>
+          <Text>Selanjutnya</Text>
           </Button>
         </Container>
       </StyleProvider>
