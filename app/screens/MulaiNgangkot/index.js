@@ -29,7 +29,7 @@ import firebase from '../../config/firebase';
 import styles from './styles';
 import MapView from 'react-native-maps';
 
-export default class RuteAngkot extends Component {
+export default class MulaiNgangkot extends Component {
 
   constructor(props) {
     super(props);
@@ -42,89 +42,33 @@ export default class RuteAngkot extends Component {
         longitude: this.navigationProps.position.longitude
       },
       loading: false,
-      search: true,
-      rute: [],
-      ruteTerpilih: "",
-      overview_path: [],
+      ruteTerpilih: this.navigationProps.position.id_rute,
+      overview_path: this.navigationProps.overview_path,
+      pengemudi: [],
       error: null
     };
 
-    //  mengambil semua data rute
-    firebase.database().ref("rute").once("value").then((snapshot) => {
-      let rute = [];
+    // mencari pengemudi yang online
+    firebase.database().ref("pengemudi").on("value", (snapshot) => {
+      let pengemudi = [];
       for (let index in snapshot.val()) {
-        rute.push(snapshot.val()[index]);
-      }
-      this.setState({rute});
-
-      // mencari rute terdekat dari titik tujuan
-      let latTujuan = this.navigationProps.lokasiTujuan.latitude;
-      let lonTujuan = this.navigationProps.lokasiTujuan.longitude;
-      let ruteDekat = [];
-      this.state.rute.forEach((item) => {
-        let overview_path = item.rute.routes[0].overview_path;
-        let dekat = false;
-
-        for(let index in overview_path) {
-          let latRute = overview_path[index].lat;
-          let lonRute = overview_path[index].lng;
-          let jarak = this.getDistanceFromLatLonInKm(latTujuan, lonTujuan, latRute, lonRute);
-          if(jarak < 1.5) {
-            dekat = true;
-            break;
-          }
+        let item = snapshot.val()[index];
+        if(item.angkutan.id_rute == this.navigationProps.id_rute && item.online == 1) {
+          pengemudi.push(item);
         }
+      }
+      this.setState({pengemudi});
 
-        if(dekat) {
-          ruteDekat.push(item);
+      this.state.pengemudi.forEach((item) => {
+        let pengemudiLat = item.lokasi.latitude;
+        let pengemudiLon = item.lokasi.longitude;
+        let awalLat = this.navigationProps.lokasiAwal.latitude;
+        let awalLon = this.navigationProps.lokasiAwal.longitude;
+        let jarak = this.getDistanceFromLatLonInKm(pengemudiLat, pengemudiLon, awalLat, awalLon);
+        if(jarak < 0.5) {
+          // notification
         }
       });
-
-      // mencari rute terdekat dari titik awal
-      let latAwal = this.navigationProps.lokasiAwal.latitude;
-      let lonAwal = this.navigationProps.lokasiAwal.longitude;
-      let ruteDekat2 = [];
-      ruteDekat.forEach((item) => {
-        let overview_path = item.rute.routes[0].overview_path;
-        let dekat = false;
-
-        for(let index in overview_path) {
-          let latRute = overview_path[index].lat;
-          let lonRute = overview_path[index].lng;
-          let jarak = this.getDistanceFromLatLonInKm(latAwal, lonAwal, latRute, lonRute);
-          if(jarak < 1) {
-            dekat = true;
-            break;
-          }
-        }
-
-        if(dekat) {
-          ruteDekat2.push(item);
-        }
-      });
-
-      // kembali apabila tidak ada rute yang ditemukan
-      if(!ruteDekat2.length > 0) {
-        Alert.alert("Rute Angkot", "Tidak ditemukan rute angkot yang sesuai, silahkan ubah lokasi awal dan tujuan anda");
-        this.props.navigation.navigate("Main");
-        return 0;
-      }
-
-      // simpan rute yang dekat ke state
-      let overview_path = [];
-      for(let index in ruteDekat2[0].rute.routes[0].overview_path) {
-        let latitude = ruteDekat2[0].rute.routes[0].overview_path[index].lat;
-        let longitude = ruteDekat2[0].rute.routes[0].overview_path[index].lng;
-        overview_path.push({latitude, longitude});
-      }
-
-      this.setState({
-        search: false,
-        rute: ruteDekat2,
-        ruteTerpilih: ruteDekat2[0].id_rute,
-        overview_path: overview_path
-      });
-      this.mapRef.fitToElements(false);
     });
   }
 
@@ -167,29 +111,14 @@ export default class RuteAngkot extends Component {
     navigator.geolocation.clearWatch(this.watchId);
   }
 
-  setRute(id_rute, indexItem) {
-    let overview_path = [];
-    for(let index in this.state.rute[indexItem].rute.routes[0].overview_path) {
-      let latitude = this.state.rute[indexItem].rute.routes[0].overview_path[index].lat;
-      let longitude = this.state.rute[indexItem].rute.routes[0].overview_path[index].lng;
-      overview_path.push({latitude, longitude});
-    }
-
-    this.setState({
-      ruteTerpilih: id_rute,
-      overview_path: overview_path
-    });
-    this.mapRef.fitToElements(true);
-  }
-
   ngangkot () {
-      this.props.navigation.navigate('MulaiNgangkot', {
-        lokasiAwal: this.navigationProps.lokasiAwal,
-        lokasiTujuan: this.navigationProps.lokasiTujuan,
-        position: this.state.position,
-        overview_path: this.state.overview_path,
-        id_rute: this.state.ruteTerpilih
-      });
+    this.props.navigation.navigate('MulaiNgangkot', {
+      lokasiAwal: this.navigationProps.lokasiAwal,
+      lokasiTujuan: this.navigationProps.lokasiTujuan,
+      position: this.state.position,
+      overview_path: this.state.overview_path,
+      id_rute: this.state.ruteTerpilih
+    });
   }
 
   render() {
@@ -203,7 +132,7 @@ export default class RuteAngkot extends Component {
               </Button>
             </Left>
             <Body>
-            <Title>Pilih Rute Angkot</Title>
+            <Title>Ngangkot</Title>
             </Body>
           </Header>
 
@@ -249,28 +178,26 @@ export default class RuteAngkot extends Component {
                 strokeColor={'#709eff'}
                 strokeWidth={3}/>
 
+              {/* marker pengemudi */}
+              {this.state.pengemudi.map(marker => (
+                <MapView.Marker
+                  pinColor={"#3e3e3e"}
+                  key={marker.id_pengemudi}
+                  coordinate={marker.lokasi}
+                  title={'pengemudi'}
+                  description={'pengemudi'}
+                />
+              ))}
+
             </MapView>
-            <Text>{ this.state.search ? 'mencari rute angkot yang cocok...' : '' }</Text>
             <Text>{ this.state.loading ? 'mencari lokasi saat ini...' : '' }</Text>
           </View>
-
-          <Content style={styles.pickerContainer} padder>
-            <Label>Pilih Rute Angkot</Label>
-            <Picker
-              selectedValue={this.state.ruteTerpilih}
-              onValueChange={(value, index) => this.setRute(value, index)}
-              mode="dropdown">
-              {this.state.rute.map(rute => (
-                <Item key={Math.random().toString(36).substring(7)} label={rute.id_rute} value={rute.id_rute} />
-              ))}
-            </Picker>
-          </Content>
 
           <Button
             success
             block
             onPress={() => this.ngangkot()}>
-            <Text>Ngangkot</Text>
+            <Text>Selesai</Text>
           </Button>
         </Container>
       </StyleProvider>

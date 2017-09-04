@@ -13,6 +13,7 @@ import RuangPercakapan from './app/screens/RuangPercakapan/index';
 import LokasiAwal from './app/screens/LokasiAwal';
 import LokasiTujuan from './app/screens/LokasiTujuan';
 import RuteAngkot from "./app/screens/RuteAngkot/index";
+import MulaiNgangkot from "./app/screens/MulaiNgangkot/index";
 
 console.ignoredYellowBox = [
   'Setting a timer'
@@ -32,7 +33,8 @@ const ngangkot = StackNavigator({
   RuangPercakapan: {screen: RuangPercakapan},
   LokasiAwal: {screen: LokasiAwal},
   LokasiTujuan: {screen: LokasiTujuan},
-  RuteAngkot: {screen: RuteAngkot}
+  RuteAngkot: {screen: RuteAngkot},
+  MulaiNgangkot: {screen: MulaiNgangkot}
 }, {
   headerMode: 'screen',
   navigationOptions: {

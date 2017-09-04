@@ -40,7 +40,7 @@ export default class LokasiAwal extends Component {
   }
 
   openSearchModal() {
-    RNGooglePlaces.openAutocompleteModal().then((place) => {
+    RNGooglePlaces.openAutocompleteModal({country: 'ID'}).then((place) => {
       let coordinate = {
         latitude: place.latitude,
         longitude: place.longitude
