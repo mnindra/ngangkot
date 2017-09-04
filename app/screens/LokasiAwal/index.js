@@ -13,7 +13,8 @@ import {
   Header,
   Left,
   Body,
-  Title
+  Title,
+  Right
 } from 'native-base';
 import {View, Alert} from  'react-native';
 import getTheme from '../../../native-base-theme/components/index';
@@ -21,6 +22,7 @@ import material from '../../../native-base-theme/variables/material';
 import firebase from '../../config/firebase';
 import styles from './styles';
 import MapView from 'react-native-maps';
+import RNGooglePlaces from 'react-native-google-places';
 
 export default class LokasiAwal extends Component {
 
@@ -32,10 +34,20 @@ export default class LokasiAwal extends Component {
         longitude: 0
       },
       loading: true,
-      markers: [],
-      error: null
+      markers: []
     };
     this.mapRef = null;
+  }
+
+  openSearchModal() {
+    RNGooglePlaces.openAutocompleteModal().then((place) => {
+      let coordinate = {
+        latitude: place.latitude,
+        longitude: place.longitude
+      };
+      this.addMarker(coordinate);
+      this.mapRef.fitToElements(true);
+    }).catch(error => console.log(error.message));
   }
 
   componentDidMount() {
@@ -44,8 +56,7 @@ export default class LokasiAwal extends Component {
           position: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-          },
-          error: null
+          }
         });
 
         if(this.state.loading == true) {
@@ -55,7 +66,12 @@ export default class LokasiAwal extends Component {
           });
         }
 
-      }, (error) => this.setState({ error: error.message }),
+      }, (error) => {
+        Alert.alert('Peringatan', 'Lokasi tidak dapat ditemukan');
+        this.setState({
+          loading: false
+        });
+      },
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
     );
   }
@@ -95,6 +111,11 @@ export default class LokasiAwal extends Component {
             <Body>
             <Title>Lokasi Awal</Title>
             </Body>
+            <Right>
+              <Button transparent onPress={() => this.openSearchModal()}>
+                <Icon name="search" />
+              </Button>
+            </Right>
           </Header>
 
           <View style={styles.mapContainer}>

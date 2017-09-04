@@ -144,7 +144,7 @@ export default class UbahFoto extends Component {
             success
             block
             onPress={() => this.UploadFoto()}>
-            <Text>Ubah Foto</Text>
+            <Text>Simpan</Text>
           </Button>
         </Container>
       </StyleProvider>

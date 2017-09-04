@@ -106,7 +106,7 @@ export default class Main extends Component {
             </Body>
             <Right>
               <Button danger onPress={() => this.Logout()}>
-                <Text>Logout</Text>
+                <Text>Keluar</Text>
               </Button>
             </Right>
           </Header>

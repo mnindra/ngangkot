@@ -182,6 +182,18 @@ export default class RuteAngkot extends Component {
     this.mapRef.fitToElements(true);
   }
 
+  ngangkot () {
+    if(this.state.markers.length > 0) {
+      this.props.navigation.navigate('RuteAngkot', {
+        lokasiAwal: this.navigationProps.lokasiAwal,
+        lokasiTujuan: this.state.markers[0].latlng,
+        position: this.state.position
+      });
+    } else {
+      Alert.alert("Lokasi Tujuan", "Silahkan pilih lokasi tujuan");
+    }
+  }
+
   render() {
     return (
       <StyleProvider style={getTheme(material)}>
@@ -207,7 +219,7 @@ export default class RuteAngkot extends Component {
                 longitudeDelta: 0.13812806457281113,
               }}
               style={styles.map}
-              onMapReady={() => this.mapRef.fitToElements(true)}>
+              onMapReady={() => this.mapRef.fitToElements(false)}>
 
               {/* marker posisi */}
               <MapView.Marker

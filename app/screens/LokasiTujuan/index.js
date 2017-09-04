@@ -13,7 +13,8 @@ import {
   Header,
   Left,
   Body,
-  Title
+  Title,
+  Right
 } from 'native-base';
 import {View, Alert} from  'react-native';
 import getTheme from '../../../native-base-theme/components/index';
@@ -21,6 +22,7 @@ import material from '../../../native-base-theme/variables/material';
 import firebase from '../../config/firebase';
 import styles from './styles';
 import MapView from 'react-native-maps';
+import RNGooglePlaces from 'react-native-google-places';
 
 export default class LokasiTujuan extends Component {
 
@@ -36,7 +38,6 @@ export default class LokasiTujuan extends Component {
       },
       loading: false,
       markers: [],
-      error: null
     };
   }
 
@@ -48,16 +49,31 @@ export default class LokasiTujuan extends Component {
           position: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-          },
-          error: null
+          }
         });
-      }, (error) => this.setState({ error: error.message }),
+      }, (error) => {
+        Alert.alert('Peringatan', 'Lokasi tidak dapat ditemukan');
+        this.setState({
+          loading: false
+        });
+      },
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
     );
   }
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchId);
+  }
+
+  openSearchModal() {
+    RNGooglePlaces.openAutocompleteModal().then((place) => {
+      let coordinate = {
+        latitude: place.latitude,
+        longitude: place.longitude
+      };
+      this.addMarker(coordinate);
+      this.mapRef.fitToElements(true);
+    }).catch(error => console.log(error.message));
   }
 
   addMarker(coordinate) {
@@ -92,6 +108,11 @@ export default class LokasiTujuan extends Component {
             <Body>
             <Title>Lokasi Tujuan</Title>
             </Body>
+            <Right>
+              <Button transparent onPress={() => this.openSearchModal()}>
+                <Icon name="search" />
+              </Button>
+            </Right>
           </Header>
 
           <View style={styles.mapContainer}>
@@ -104,7 +125,7 @@ export default class LokasiTujuan extends Component {
                 longitudeDelta: 0.13812806457281113,
               }}
               style={styles.map}
-              onMapReady={() => this.mapRef.fitToElements(true)}
+              onMapReady={() => this.mapRef.fitToElements(false)}
               onPress={(event) => this.addMarker(event.nativeEvent.coordinate)}>
 
               {/* marker posisi */}

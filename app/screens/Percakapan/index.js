@@ -53,7 +53,7 @@ export default class Percakapan extends Component {
         <Body>
         <Text>{rowData.pengemudi.nama}</Text>
         <Text note>{pesan[pesan.length - 1].waktu}</Text>
-        <Text>{pesan[pesan.length - 1].isi}</Text>
+        <Text>{pesan[pesan.length - 1].isi.substring(50)}</Text>
         </Body>
       </ListItem>
     )

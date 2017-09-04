@@ -119,7 +119,7 @@ export default class Login extends ValidationComponent {
 
             <Card style={styles.card} transparent>
               <Content padder>
-                <Text style={styles.formText}>Login Untuk Melanjutkan</Text>
+                <Text style={styles.formText}>Masuk Untuk Melanjutkan</Text>
 
                 <Form style={styles.form}>
                   <Item floatingLabel error={this.isFieldInError('email')}>
@@ -148,7 +148,7 @@ export default class Login extends ValidationComponent {
                   block
                   style={styles.formButton}
                   onPress={() => this.login()}>
-                  <Text>Login</Text>
+                  <Text>Masuk</Text>
                 </Button>
 
                 <Button

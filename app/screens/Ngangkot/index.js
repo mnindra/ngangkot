@@ -17,7 +17,7 @@ export default class Peta extends Component {
     return (
       <Content padder style={styles.content}>
         <Text>Ngangkot</Text>
-        <Button onPress={() => this.navigation.navigate('LokasiAwal')}><Text>Mulai Ngangkot</Text></Button>
+        <Button onPress={() => this.navigation.navigate('LokasiAwal')}><Text>Cari Angkot</Text></Button>
       </Content>
     )
   }
