@@ -96,13 +96,8 @@ export default class Main extends Component {
       <StyleProvider style={getTheme(material)}>
         <Container>
           <Header noShadow>
-            <Left>
-              <Button transparent>
-                <Icon name="menu" />
-              </Button>
-            </Left>
             <Body>
-            <Title>{ this.state.activeTab.charAt(0).toUpperCase() + this.state.activeTab.slice(1) }</Title>
+              <Title>{ this.state.activeTab.charAt(0).toUpperCase() + this.state.activeTab.slice(1) }</Title>
             </Body>
             <Right>
               <Button danger onPress={() => this.Logout()}>
