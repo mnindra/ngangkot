@@ -46,6 +46,7 @@ export default class MulaiNgangkot extends Component {
       overview_path: this.navigationProps.overview_path,
       pengemudi: [],
       penumpang: null,
+      dekat: false,
       error: null
     };
 
@@ -90,8 +91,9 @@ export default class MulaiNgangkot extends Component {
         let awalLat = this.navigationProps.lokasiAwal.latitude;
         let awalLon = this.navigationProps.lokasiAwal.longitude;
         let jarak = this.getDistanceFromLatLonInKm(pengemudiLat, pengemudiLon, awalLat, awalLon);
-        if(jarak < 0.5) {
-          Alert.alert("sudah dekat");
+        if(jarak < 0.5 && this.state.dekat === false) {
+          Alert.alert("Angkot Sudah Dekat", "Angkot berada kurang dari 500 Meter");
+          this.setState({dekat: true});
         }
       });
     });

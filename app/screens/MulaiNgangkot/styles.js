@@ -50,6 +50,9 @@ const styles = StyleSheet.create({
   pinPengemudi: {
     width: 30,
     height: 30
+  },
+  notification: {
+    paddingTop: 100,
   }
 });
 
