@@ -2,23 +2,24 @@ import React, {Component} from 'react';
 import {
   Content,
   Text,
-  Button
+  Button,
 } from 'native-base';
+import {Image, View} from 'react-native';
 import styles from './styles';
 
-export default class Peta extends Component {
+export default class Ngangkot extends Component {
 
   constructor(props) {
     super(props);
     this.navigation = this.props.parent.props.navigation;
-}
+  }
 
   render () {
     return (
-      <Content padder style={styles.content}>
-        <Text>Ngangkot</Text>
-        <Button onPress={() => this.navigation.navigate('LokasiAwal')}><Text>Cari Angkot</Text></Button>
-      </Content>
+        <View style={styles.content}>
+          <Image style={styles.logo} source={require('../../images/logo.png')} />
+          <Button style={styles.button} onPress={() => this.navigation.navigate('LokasiAwal')}><Text>Cari Angkot</Text></Button>
+        </View>
     )
   }
 
