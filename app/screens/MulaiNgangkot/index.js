@@ -49,6 +49,30 @@ export default class MulaiNgangkot extends Component {
       error: null
     };
 
+    // buat status ngangkot di database
+    let uid = firebase.auth().currentUser.uid;
+    firebase.database().ref("ngangkot/" + uid).set({
+      id_penumpang: uid,
+      lokasi: this.navigationProps.lokasiAwal
+    });
+  }
+
+  componentDidMount() {
+    // mencari lokasi geolocation
+    this.mapRef.fitToElements(false);
+    this.watchId = navigator.geolocation.watchPosition((position) => {
+        this.setState({
+          loading: false,
+          position: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          },
+          error: null
+        });
+      }, (error) => this.setState({ error: error.message }),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
+    );
+
     // mencari pengemudi yang online
     firebase.database().ref("pengemudi").on("value", (snapshot) => {
       let pengemudi = [];
@@ -81,23 +105,6 @@ export default class MulaiNgangkot extends Component {
     });
   }
 
-  componentDidMount() {
-    // mencari lokasi geolocation
-    this.mapRef.fitToElements(false);
-    this.watchId = navigator.geolocation.watchPosition((position) => {
-        this.setState({
-          loading: false,
-          position: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          },
-          error: null
-        });
-      }, (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
-    );
-  }
-
   getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
     var R = 6371; // Radius of the earth in km
     var dLat = this.deg2rad(lat2-lat1);  // deg2rad below
@@ -124,14 +131,10 @@ export default class MulaiNgangkot extends Component {
     this.props.navigation.navigate('ProfilPengemudi', {pengemudi, penumpang: this.state.penumpang});
   }
 
-  ngangkot () {
-    this.props.navigation.navigate('MulaiNgangkot', {
-      lokasiAwal: this.navigationProps.lokasiAwal,
-      lokasiTujuan: this.navigationProps.lokasiTujuan,
-      position: this.state.position,
-      overview_path: this.state.overview_path,
-      id_rute: this.state.ruteTerpilih
-    });
+  selesai () {
+    let uid = firebase.auth().currentUser.uid;
+    firebase.database().ref("ngangkot/" + uid).remove();
+    this.props.navigation.navigate('Main');
   }
 
   render() {
@@ -210,7 +213,7 @@ export default class MulaiNgangkot extends Component {
           <Button
             success
             block
-            onPress={() => this.ngangkot()}>
+            onPress={() => this.selesai()}>
             <Text>Selesai</Text>
           </Button>
         </Container>
