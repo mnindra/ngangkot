@@ -28,17 +28,13 @@ export default class LihatAngkutan extends Component {
     super(props);
     this.state = {
       overview_path: [],
-      start: {},
-      end: {},
       biaya: 0,
       keterangan: ''
     };
     this.placehold = 'http://placehold.it/300x300';
     this.navigationProps = this.props.navigation.state.params;
     this.mapRef = null;
-  }
 
-  componentDidMount() {
     // ambil overview_path untuk membuat polyline
     let id_rute = this.navigationProps.pengemudi.angkutan.id_rute;
     firebase.database().ref("rute/" + id_rute + "/rute/routes/0/overview_path").once("value").then((snapshot) => {
@@ -51,10 +47,11 @@ export default class LihatAngkutan extends Component {
       }
 
       this.setState({
-        overview_path: overview_path,
-        start: overview_path[0],
-        end: overview_path[overview_path.length - 1],
+        overview_path: overview_path
       });
+
+      this.start = this.state.overview_path[0];
+      this.end = this.state.overview_path[overview_path.length - 1];
     });
 
     // ambil informasi tentang biaya, keterangan dll
@@ -137,15 +134,17 @@ export default class LihatAngkutan extends Component {
                   strokeWidth={3}/>
 
                 <MapView.Marker
-                  coordinate={this.state.start}
-                  title={'A'}
-                  description={'Titik Awal'}
+                  pinColor={"#007AFF"}
+                  coordinate={this.start}
+                  title={'Titik Awal'}
+                  description={'Titik Awal Angkot beroperasi'}
                 />
 
                 <MapView.Marker
-                  coordinate={this.state.end}
-                  title={'B'}
-                  description={'Titik Akhir'}
+                  pinColor={"#ff3f29"}
+                  coordinate={this.end}
+                  title={'Titik Akhir'}
+                  description={'Titik Akhir Angkot beroperasi'}
                 />
               </MapView>
             </Content>
