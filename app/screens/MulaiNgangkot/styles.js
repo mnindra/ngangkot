@@ -36,6 +36,20 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: '#007AFF'
   },
+  markerPengemudi: {
+    height: 40,
+    width: 40,
+    borderWidth: 3,
+    borderColor: 'white',
+    borderRadius: 40 / 2,
+    overflow: 'hidden',
+    backgroundColor: '#ff3f29',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  markerPengemudiIcon: {
+    color: "#fff"
+  },
   textHint: {
     top: 0,
     left: 0,

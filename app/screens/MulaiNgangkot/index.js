@@ -204,8 +204,11 @@ export default class MulaiNgangkot extends Component {
                   coordinate={marker.lokasi}
                   title={marker.nama}
                   description={'sentuh untuk melihat profil pengemudi'}
-                  onCalloutPress={() => { this.profilPengemudi(marker) }}
-                />
+                  onCalloutPress={() => { this.profilPengemudi(marker) }}>
+                  <View style={styles.markerPengemudi}>
+                    <Icon name="directions-car" style={styles.markerPengemudiIcon} />
+                  </View>
+                </MapView.Marker>
               ))}
 
             </MapView>
