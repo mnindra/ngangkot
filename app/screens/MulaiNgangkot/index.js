@@ -45,6 +45,7 @@ export default class MulaiNgangkot extends Component {
       ruteTerpilih: this.navigationProps.position.id_rute,
       overview_path: this.navigationProps.overview_path,
       pengemudi: [],
+      penumpang: null,
       error: null
     };
 
@@ -66,8 +67,16 @@ export default class MulaiNgangkot extends Component {
         let awalLon = this.navigationProps.lokasiAwal.longitude;
         let jarak = this.getDistanceFromLatLonInKm(pengemudiLat, pengemudiLon, awalLat, awalLon);
         if(jarak < 0.5) {
-          // notification
+          Alert.alert("sudah dekat");
         }
+      });
+    });
+
+    // ambil data penumpang
+    let uid = firebase.auth().currentUser.uid;
+    firebase.database().ref("penumpang/" + uid).once("value").then((snapshot) => {
+      this.setState({
+        penumpang: snapshot.val()
       });
     });
   }
@@ -109,6 +118,10 @@ export default class MulaiNgangkot extends Component {
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchId);
+  }
+
+  profilPengemudi(pengemudi) {
+    this.props.navigation.navigate('ProfilPengemudi', {pengemudi, penumpang: this.state.penumpang});
   }
 
   ngangkot () {
@@ -184,8 +197,9 @@ export default class MulaiNgangkot extends Component {
                   pinColor={"#3e3e3e"}
                   key={marker.id_pengemudi}
                   coordinate={marker.lokasi}
-                  title={'pengemudi'}
-                  description={'pengemudi'}
+                  title={marker.nama}
+                  description={'sentuh untuk melihat profil pengemudi'}
+                  onCalloutPress={() => { this.profilPengemudi(marker) }}
                 />
               ))}
 
