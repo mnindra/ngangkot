@@ -229,7 +229,7 @@ export default class RuteAngkot extends Component {
 
               {/* marker titik tujuan */}
               <MapView.Marker
-                pinColor={"#447dd4"}
+                pinColor={"#ff3f29"}
                 coordinate={this.navigationProps.lokasiTujuan}
                 title={'Lokasi Tujuan'}
                 description={'lokasi yang ingin anda tuju'}
@@ -237,7 +237,7 @@ export default class RuteAngkot extends Component {
 
               {/* marker titik awal */}
               <MapView.Marker
-                pinColor={"#71B300"}
+                pinColor={"#007AFF"}
                 coordinate={this.navigationProps.lokasiAwal}
                 title={'Lokasi Awal'}
                 description={'lokasi dimana anda akan naik angkot'}

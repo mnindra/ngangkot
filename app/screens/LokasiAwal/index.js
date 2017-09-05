@@ -142,7 +142,7 @@ export default class LokasiAwal extends Component {
               {this.state.markers.map(marker => (
                 <MapView.Marker
                   draggable
-                  pinColor={"#3cb338"}
+                  pinColor={"#007AFF"}
                   key={marker.key}
                   coordinate={marker.latlng}
                   title={'Lokasi Awal'}
