@@ -75,7 +75,7 @@ export default class LokasiAwal extends Component {
           this.mapRef.fitToElements(true);
         }
       },
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 0, distanceFilter: 10 },
     );
   }
 

@@ -70,8 +70,14 @@ export default class MulaiNgangkot extends Component {
           },
           error: null
         });
-      }, (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
+      }, (error) => {
+        Alert.alert('Peringatan', 'Lokasi tidak dapat ditemukan');
+        this.setState({
+          loading: false
+        });
+        this.mapRef.fitToElements(true);
+      },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 0, distanceFilter: 10 },
     );
 
     // mencari pengemudi yang online
