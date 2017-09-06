@@ -42,7 +42,7 @@ export default class MulaiNgangkot extends Component {
         longitude: this.navigationProps.position.longitude
       },
       loading: false,
-      ruteTerpilih: this.navigationProps.position.id_rute,
+      ruteTerpilih: this.navigationProps.id_rute,
       overview_path: this.navigationProps.overview_path,
       pengemudi: [],
       penumpang: null,
@@ -52,7 +52,7 @@ export default class MulaiNgangkot extends Component {
 
     // buat status ngangkot di database
     let uid = firebase.auth().currentUser.uid;
-    firebase.database().ref("ngangkot/" + uid).set({
+    firebase.database().ref("rute/" + this.state.ruteTerpilih + "/penumpang/" + uid).set({
       id_penumpang: uid,
       lokasi: this.navigationProps.lokasiAwal
     });
@@ -135,7 +135,7 @@ export default class MulaiNgangkot extends Component {
 
   selesai () {
     let uid = firebase.auth().currentUser.uid;
-    firebase.database().ref("ngangkot/" + uid).remove();
+    firebase.database().ref("rute/" + this.state.ruteTerpilih + "/penumpang/" + uid).remove();
     this.props.navigation.navigate('Main');
   }
 
@@ -144,11 +144,6 @@ export default class MulaiNgangkot extends Component {
       <StyleProvider style={getTheme(material)}>
         <Container style={styles.container}>
           <Header>
-            <Left>
-              <Button transparent onPress={() => this.props.navigation.goBack()}>
-                <Icon name="chevron-left" />
-              </Button>
-            </Left>
             <Body>
             <Title>Ngangkot</Title>
             </Body>
