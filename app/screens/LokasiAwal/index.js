@@ -30,8 +30,8 @@ export default class LokasiAwal extends Component {
     super(props);
     this.state = {
       position: {
-        latitude: 0,
-        longitude: 0
+        latitude: -7.9477,
+        longitude: 112.6163
       },
       loading: true,
       markers: []
@@ -67,10 +67,13 @@ export default class LokasiAwal extends Component {
         }
 
       }, (error) => {
-        Alert.alert('Peringatan', 'Lokasi tidak dapat ditemukan');
-        this.setState({
-          loading: false
-        });
+        if(this.state.loading == true) {
+          Alert.alert('Peringatan', 'Lokasi tidak dapat ditemukan');
+          this.setState({
+            loading: false
+          });
+          this.mapRef.fitToElements(true);
+        }
       },
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
     );
