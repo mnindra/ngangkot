@@ -23,6 +23,7 @@ import firebase from '../../config/firebase';
 import styles from './styles';
 import MapView from 'react-native-maps';
 import RNGooglePlaces from 'react-native-google-places';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export default class LokasiAwal extends Component {
 
@@ -155,7 +156,7 @@ export default class LokasiAwal extends Component {
               ))}
 
             </MapView>
-            <Text>{ this.state.loading ? 'mencari lokasi saat ini...' : '' }</Text>
+            {/*<Text>{ this.state.loading ? 'mencari lokasi saat ini...' : '' }</Text>*/}
             <Text style={styles.textHint}>Sentuh peta untuk menentukan lokasi awal</Text>
           </View>
 
@@ -165,6 +166,11 @@ export default class LokasiAwal extends Component {
             onPress={() => this.selanjutnya()}>
             <Text>Selanjutnya</Text>
           </Button>
+          <Spinner
+            visible={this.state.loading}
+            textContent={"Mencari lokasi saat ini..."}
+            textStyle={{color: '#FFF'}}
+            overlayColor={"#00BCD4"}/>
         </Container>
       </StyleProvider>
     );

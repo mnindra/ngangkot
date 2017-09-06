@@ -22,12 +22,14 @@ import material from '../../../native-base-theme/variables/material';
 import firebase from '../../config/firebase';
 import RNFetchBlob from 'react-native-fetch-blob';
 import styles from './styles';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export default class UbahFoto extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      loadingAnimation: false,
       image: '',
       imagePath: this.props.navigation.state.params.image
     };
@@ -73,6 +75,7 @@ export default class UbahFoto extends Component {
     if (this.state.image == '') {
       Alert.alert("Foto Profil", "Pilih foto profil terlebih dahulu");
     } else {
+      this.setState({loadingAnimation:true});
       const Blob = RNFetchBlob.polyfill.Blob;
       const fs = RNFetchBlob.fs;
       window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
@@ -89,8 +92,10 @@ export default class UbahFoto extends Component {
         return imageRef.getDownloadURL();
       }).then((url) => {
         firebase.database().ref('penumpang/' + uid).update({foto: url});
+        this.setState({loadingAnimation:false});
         this.props.navigation.navigate('Main', {activeTab: 'profil'});
       }).catch((error) => {
+        this.setState({loadingAnimation:false});
         console.log(error);
       });
     }
@@ -146,6 +151,11 @@ export default class UbahFoto extends Component {
             onPress={() => this.UploadFoto()}>
             <Text>Simpan</Text>
           </Button>
+          <Spinner
+            visible={this.state.loadingAnimation}
+            textContent={"Menyimpan Foto Profil..."}
+            textStyle={{color: '#FFF'}}
+            overlayColor={"#00BCD4"}/>
         </Container>
       </StyleProvider>
     );
