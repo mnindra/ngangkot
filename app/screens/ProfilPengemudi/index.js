@@ -22,7 +22,7 @@ import firebase from '../../config/firebase';
 import StarRating from 'react-native-star-rating';
 import styles from './styles';
 
-export default class Profil extends Component {
+export default class ProfilPengemudi extends Component {
 
   constructor(props) {
     super(props);
