@@ -85,8 +85,10 @@ export default class MulaiNgangkot extends Component {
       let pengemudi = [];
       for (let index in snapshot.val()) {
         let item = snapshot.val()[index];
-        if(item.angkutan.id_rute == this.navigationProps.id_rute && item.online == 1) {
-          pengemudi.push(item);
+        if(typeof item.angkutan !== 'undefined') {
+          if(item.angkutan.id_rute == this.navigationProps.id_rute && item.online == 1) {
+            pengemudi.push(item);
+          }
         }
       }
       this.setState({pengemudi});
