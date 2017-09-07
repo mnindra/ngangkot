@@ -108,7 +108,7 @@ export default class MulaiNgangkot extends Component {
 
     // ambil data penumpang
     let uid = firebase.auth().currentUser.uid;
-    firebase.database().ref("penumpang/" + uid).once("value").then((snapshot) => {
+    firebase.database().ref("penumpang/" + uid).on("value").then((snapshot) => {
       this.setState({
         penumpang: snapshot.val()
       });
