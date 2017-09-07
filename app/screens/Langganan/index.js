@@ -8,7 +8,8 @@ import {
   Body,
   Thumbnail,
   Right,
-  Button
+  Button,
+  Icon
 } from 'native-base';
 import {Alert} from 'react-native';
 import firebase from '../../config/firebase';
@@ -52,7 +53,9 @@ export default class Langganan extends Component {
         <Text note style={{color: '#b5423c'}}>{konfirmasi}</Text>
         </Body>
         <Right>
-          <Button small danger onPress={() => this.batal(rowData.id_pengemudi)}><Text>Batal</Text></Button>
+          <Button small transparent danger onPress={() => this.batal(rowData.id_pengemudi)}>
+            <Icon name="delete"/>
+          </Button>
         </Right>
       </ListItem>
     )
