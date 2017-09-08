@@ -108,7 +108,7 @@ export default class MulaiNgangkot extends Component {
 
     // ambil data penumpang
     let uid = firebase.auth().currentUser.uid;
-    firebase.database().ref("penumpang/" + uid).on("value").then((snapshot) => {
+    firebase.database().ref("penumpang/" + uid).on("value", (snapshot) => {
       this.setState({
         penumpang: snapshot.val()
       });
@@ -138,7 +138,7 @@ export default class MulaiNgangkot extends Component {
   }
 
   profilPengemudi(pengemudi) {
-    this.props.navigation.navigate('ProfilPengemudi', {pengemudi, penumpang: this.state.penumpang});
+    this.props.navigation.navigate('ProfilPengemudi', {pengemudi: pengemudi, penumpang: this.state.penumpang});
   }
 
   selesai () {
