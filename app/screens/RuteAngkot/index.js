@@ -41,6 +41,7 @@ export default class RuteAngkot extends Component {
         latitude: this.navigationProps.position.latitude,
         longitude: this.navigationProps.position.longitude
       },
+      biaya: 0,
       loading: false,
       search: true,
       rute: [],
@@ -120,6 +121,7 @@ export default class RuteAngkot extends Component {
 
       this.setState({
         search: false,
+        biaya: ruteDekat2[0].biaya,
         rute: ruteDekat2,
         ruteTerpilih: ruteDekat2[0].id_rute,
         overview_path: overview_path
@@ -183,6 +185,7 @@ export default class RuteAngkot extends Component {
 
     this.setState({
       ruteTerpilih: id_rute,
+      biaya: this.state.rute[indexItem].biaya,
       overview_path: overview_path
     });
     this.mapRef.fitToElements(true);
@@ -270,6 +273,7 @@ export default class RuteAngkot extends Component {
                 <Item key={Math.random().toString(36).substring(7)} label={rute.id_rute} value={rute.id_rute} />
               ))}
             </Picker>
+            <Label style={styles.labelBiaya}>Rp. {this.state.biaya}</Label>
           </Content>
 
           <Button

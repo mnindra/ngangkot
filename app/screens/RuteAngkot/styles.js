@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   mapContainer: {
-    flex: 4,
+    flex: 3,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -47,6 +47,9 @@ const styles = StyleSheet.create({
   pickerContainer: {
     flex: 1
   },
+  labelBiaya: {
+    marginBottom: 10
+  }
 });
 
 export default styles;
